@@ -35,13 +35,22 @@ size_t count_frows(FILE *file) {
 char** read_file(FILE *file) {
 	size_t number_of_rows, iter;
 	char** string_array;
+	fseek(file, 0, SEEK_SET);
 	number_of_rows = count_frows(file);
 	string_array = calloc(sizeof(char*), number_of_rows);
 	for(iter = 0; iter < number_of_rows; iter++) {
 		string_array[iter] = read_fline(file);
 	}
+	fseek(file, 0, SEEK_SET);
 	return string_array;	
 		
 }
 
-	
+void print_file(FILE *file) {
+	size_t iter;
+	char** array;
+	array = read_file(file);
+	for(iter = 0; iter < count_frows(file); iter++) {
+		printf("%s\n", array[iter]);
+	}	
+}	

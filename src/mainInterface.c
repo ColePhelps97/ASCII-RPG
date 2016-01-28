@@ -1,8 +1,9 @@
 #include <ncurses.h>
 #include <stdlib.h>
-#include "hero.c"
+#include "hero.h"
 
-void loadInterface(){
+
+void loadInterface(hero hero){
 	int i=0;
 	const char* MENU_PANEL_UP =      "|              |           |                 |                 |              |";
 	const char* MENU_PANEL_CENTER =  "|  Menu (Esc)  |  Map (M)  |  Inventory (I)  |  Character (C)  |  Skills (K)  |";
@@ -32,7 +33,7 @@ void loadInterface(){
 		move(37, i);
 		printw("_");
 	}
-
+	
 	mvwprintw(stdscr, 3, 3, "%s", HEALTH);
 	mvwprintw(stdscr, 3, 11, "%u/%u", hero.currentHeroHealth, hero.maxHeroHealth);
 	mvwprintw(stdscr, 3, 22, "%s", MANA);

@@ -5,7 +5,7 @@
 	typedef unsigned int level_t;
 
 	
-	struct hero { 
+	typedef struct hero { 
 		health_t maxHeroHealth;
 		health_t currentHeroHealth;
 		mana_t maxHeroMana;
@@ -13,11 +13,13 @@
 		level_t heroLevel;
 	} hero;
 	
-	void initHero(){
+	hero initHero(){
+		hero hero;
 		hero.heroLevel = 1;
 		hero.maxHeroHealth = 100;
 		hero.currentHeroHealth = 100;
 		hero.maxHeroMana = 100;
      		hero.currentHeroMana = 100;
+		return hero;
 	}
 

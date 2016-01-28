@@ -8,5 +8,6 @@
 char* read_fline(FILE *file);
 size_t count_frows(FILE *file);
 char** read_file(FILE *file);
+void print_file(FILE *file);
 
 #endif

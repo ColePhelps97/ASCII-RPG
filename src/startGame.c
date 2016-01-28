@@ -1,12 +1,15 @@
-#include <ncurses.h>
-#include "mainInterface.c"
+#include "mainInterface.h"
 #include <stdlib.h>
+#include "hero.h"
+#include "loadLevel.h"
 
 
 
 
 void start(){
-	initHero();
-	loadInterface();
+	hero myHero;
+	myHero = initHero();
+	loadInterface(myHero);
+	loadLevel("../levels/level1.level");
 
 }
