@@ -5,9 +5,9 @@
 
 typedef struct level {
 	char** welcome_message;
-	unsigned long wm_length;
+	size_t wm_length;
 	char** variants_to_do;
-	unsigned long number_of_variants;
+	size_t number_of_variants;
 	char*** variants_text;
 	} level; 
 
@@ -23,58 +23,53 @@ typedef struct level {
 /*...									*/
 
 
-
-
-
-
-level parseLevel(char* levelName) {
-	
-	char** file_text;
-	level level;
-	unsigned long rows_num, cur_parsing_row = 0;
-	char *ulstr_end;
+level parseLevel() {
+	level level1;
+	char** text;
+	char* str_end;
+	size_t rows_num, cur_parsing_row = 0, variants_num;
 	size_t iter, iter2;
-	FILE *file = fopen(levelName, "r");
-	
-	file_text = read_file(file);
-	
-	print_file(file);	
+	FILE* file = fopen("../levels/level1.level", "r");
+	text = read_file(file);
 
-	printf("%lu", count_frows(file));
 
-	level.wm_length = strtoul(file_text[cur_parsing_row], &ulstr_end, 10);
-	
-	/* welcome message */
-	level.welcome_message = malloc(sizeof(char*) * level.wm_length);
-	
-	cur_parsing_row ++;
-
-	for(iter = 0; iter < level.wm_length; iter++) {
-		level.welcome_message[iter] = file_text[cur_parsing_row];
-		cur_parsing_row++;
-	}
-	
-	/* variants */
-	level.number_of_variants= strtoul(file_text[cur_parsing_row], &ulstr_end, 10);
-	level.variants_text = malloc(sizeof(char*)*level.number_of_variants);
-	
+	/* Welcome message length */
+	rows_num = strtoul(text[cur_parsing_row], &str_end, 10);
+	level1.wm_length = rows_num;
 	cur_parsing_row++;
-	
-	for(iter = 0; iter < level.number_of_variants; iter++) {
-		level.variants_to_do[iter] = file_text[cur_parsing_row];
-		cur_parsing_row++;
 
-		rows_num = strtoul(file_text[cur_parsing_row], &ulstr_end, 10);
-		level.variants_text[iter] = malloc(sizeof(char*)*rows_num);
 
+	/* Welcome message */
+	level1.welcome_message = (char**) malloc(sizeof(char*) * rows_num);
+	for(iter = 0; iter < rows_num; iter++) {
+		level1.welcome_message[iter] = text[cur_parsing_row];	
 		cur_parsing_row++;
-		
-		for(iter2 = 0; iter2 < rows_num; iter2++) {
-			level.variants_text[iter][iter2] = file_text[cur_parsing_row];
-			cur_parsing_row++;
-		} 
 	}
-	return level;
+	
+	/* Number of variants to do */
+	variants_num = strtoul(text[cur_parsing_row], &str_end, 10);
+	level1.number_of_variants = variants_num;
+	cur_parsing_row++;
+
+	/* Variants */
+	level1.variants_to_do = (char**) malloc(sizeof(char*) * variants_num);
+	level1.variants_text = (char***) malloc(sizeof(char*) * variants_num);
+	for(iter = 0; iter < variants_num; iter++) {
+		level1.variants_to_do[iter] = text[cur_parsing_row];
+		cur_parsing_row++;
+	
+		/*Variants text */
+		rows_num = strtoul(text[cur_parsing_row], &str_end, 10);
+		level1.variants_text[iter] = (char**) malloc(sizeof(char*) * (rows_num + 1));
+		for(iter2 = 0; iter2 < rows_num	+ 1; iter2++){
+			level1.variants_text[iter][iter2] = text[cur_parsing_row];
+			cur_parsing_row++;	
+		}
+	}
+	 
+	fclose(file);
+	return level1;
+
 }
 		
 

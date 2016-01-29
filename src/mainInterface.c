@@ -4,7 +4,7 @@
 
 
 void loadInterface(hero hero){
-	int i=0;
+	size_t i=0;
 	const char* MENU_PANEL_UP =      "|              |           |                 |                 |              |";
 	const char* MENU_PANEL_CENTER =  "|  Menu (Esc)  |  Map (M)  |  Inventory (I)  |  Character (C)  |  Skills (K)  |";
 	const char* MENU_PANEL_DOWN =    "|______________|___________|_________________|_________________|______________|________________________________________________________________________________________";
@@ -30,7 +30,7 @@ void loadInterface(hero hero){
 	for(i=1; i< getmaxx(stdscr) - 1; i++){
 		move(3, i);
 		printw("_");
-		move(37, i);
+		move(36, i);
 		printw("_");
 	}
 	
@@ -42,7 +42,6 @@ void loadInterface(hero hero){
 	mvwprintw(stdscr, 3, 45, "%u", hero.heroLevel);
 	
 	refresh();
-	getch();
 }
 	
 

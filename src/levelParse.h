@@ -4,12 +4,13 @@
 
 typedef struct level {
 	char** welcome_message;
-	unsigned long wm_length;
-        char** variants_to_do;
-	unsigned long number_of_variants;
-        char*** variants_text;
+	size_t wm_length;
+	char** variants_to_do;
+	size_t number_of_variants;
+	char*** variants_text;
+/*	char* next_level; */
 } level;
  
-level parseLevel(char* levelName);
+level parseLevel();
 
 #endif
