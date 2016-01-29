@@ -12,8 +12,8 @@ char* read_fline(FILE *file){
 	while((symbol = fgetc(file)) != '\n') 
 		number_of_chars++;
 	string = (char*) malloc(sizeof(char)*number_of_chars);
-	fseek(file, -number_of_chars-1, SEEK_CUR);
-	for(iter = 0; iter < number_of_chars; iter++) {
+	fseek(file, -number_of_chars - 1, SEEK_CUR);
+	for(iter = 0; iter < number_of_chars ; iter++) {
 		string[iter] = fgetc(file);
 	}
 	getc(file);

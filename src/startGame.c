@@ -9,7 +9,6 @@
 void start(){
 	hero myHero;
 	myHero = initHero();
-	loadInterface(myHero);
-	loadLevel("../levels/level1.level");
+	loadLevel("../levels/level1.level", myHero);
 
 }

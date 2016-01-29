@@ -18,7 +18,6 @@ typedef struct level {
 /* Variant 1 string							*/
 /* Number of strings before next variant				*/
 /* Variant 1 to do func (show_text, next_level, figth_with_enemy)	*/
-/* if to do is show_text here must be number of text's rows to show	*/
 /* Variant 2								*/
 /*...									*/
 
