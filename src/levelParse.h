@@ -12,5 +12,6 @@ typedef struct level {
 } level;
  
 level parseLevel();
+void destroyLevel(level level);
 
 #endif

@@ -71,8 +71,15 @@ level parseLevel() {
 
 }
 		
-
-
+void destroyLevel(level level) {
+	size_t iter, variants_num;
+	variants_num = level.number_of_variants;
+	for(iter = 0; iter < variants_num; iter++) 
+		free(level.variants_text[iter]);	
+	free(level.variants_text);
+	free(level.variants_to_do);
+	free(level.welcome_message);
+}
 
 
 

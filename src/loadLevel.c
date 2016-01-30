@@ -4,6 +4,7 @@
 #include "mystring.h"
 #include "mainInterface.h"
 #include "hero.h"
+#include "clearScreen.h"
 
 
 void loadLevel(char* levelName, hero hero) {
@@ -28,16 +29,16 @@ void loadLevel(char* levelName, hero hero) {
 		switch(key) {
 		
 			case '1': 
-				if(isSubString(level.variants_text[0][1], "%show_text%") == 1) {
-					clear();
+				clearGameScreen();	
+				if(isSubString(level.variants_text[0][1], "show_text") == 1) {
 					for(iter = 0; iter < strtoul(level.variants_text[0][0], &end, 10) - 1; iter++){
 						mvwprintw(stdscr, iter + 7, 10, "%s", level.variants_text[0][iter+2]);
 					}
 				}
 				
-				if(isEquals(level.variants_text[0][1], "next_level")) {		
+				if(isSubString(level.variants_text[0][1], "next_level")) {		
 					is_next_level = 1;
-					/* destroy previous level */
+					destroyLevel(level);
 				}
 				
 				break;
@@ -49,9 +50,9 @@ void loadLevel(char* levelName, hero hero) {
                                         }             
                                 }
 
-                                if(isEquals(level.variants_text[1][1], "next_level")) {
+                                if(isSubString(level.variants_text[1][1], "next_level")) {
                                         is_next_level = 1;
-                                        /* destroy previous level */
+                                        destroyLevel(level);
                                 }
 
                                 break;
