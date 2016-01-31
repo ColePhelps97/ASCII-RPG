@@ -6,20 +6,20 @@
 
 	
 	typedef struct hero { 
-		health_t maxHeroHealth;
-		health_t currentHeroHealth;
-		mana_t maxHeroMana;
-        	mana_t currentHeroMana;
-		level_t heroLevel;
+		health_t max_hero_health;
+		health_t current_hero_health;
+		mana_t max_hero_mana;
+        	mana_t current_hero_mana;
+		level_t hero_level;
 	} hero;
 	
-	hero initHero(){
+	hero init_hero(){
 		hero hero;
-		hero.heroLevel = 1;
-		hero.maxHeroHealth = 100;
-		hero.currentHeroHealth = 100;
-		hero.maxHeroMana = 100;
-     		hero.currentHeroMana = 100;
+		hero.hero_level = 1;
+		hero.max_hero_health = 100;
+		hero.current_hero_health = 100;
+		hero.max_hero_mana = 100;
+     		hero.current_hero_mana = 100;
 		return hero;
 	}
 

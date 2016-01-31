@@ -1,7 +1,7 @@
-#ifndef _MYSTRING_H_
-#define _MYSTRING_H_
+#ifndef _MY_sTRING_H_
+#define _MY_sTRING_H_
 
-int isEquals(char* string1, char* string2);
-int isSubString(char* string1, char* string2);
+int is_equals(char* string1, char* string2);
+int is_sub_string(char* string1, char* string2);
 
 #endif
