@@ -1,4 +1,4 @@
 all:
-	gcc clearScreen.c mystring.c mainMenu.c mainInterface.c hero.c loadLevel.c read_file.c levelParse.c -o menu -ansi -pedantic -Wall -Werror -lncurses
+	gcc clear_screen.c mystring.c main_menu.c main_interface.c hero.c load_level.c read_file.c level.c -o menu -ansi -pedantic -Wall -Werror -lncurses
 clean:
 	rm menu

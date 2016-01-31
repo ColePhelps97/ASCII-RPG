@@ -17,6 +17,7 @@ void load_level(char* level_name, hero hero) {
 	clear();
 	load_interface(hero);
 	level = parse_level(level_name);
+	
 	for(iter = 0; iter < level.wm_length; iter++)											
 		mvwprintw(stdscr, iter + 7, 10, "%s", level.welcome_message[iter]);						
 	

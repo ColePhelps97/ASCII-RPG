@@ -18,3 +18,37 @@ int is_sub_string(char* string1, char* string2) {
 		if(string1[i] == string2[i]) i++;
 	}
 }
+
+
+/* variants: 0-level; 1-enemy */
+char* concat(char* string1, char* string2, char* string3) {
+	char* string;
+	size_t iter = 0, string1_length, string2_length, string3_length;
+	while(string1[iter] != '\0') {
+		iter++;
+	}
+	string1_length = iter;
+	iter = 0;
+	while(string2[iter] != '\0') {
+		iter++;
+	}
+	string2_length = iter;
+	iter = 0;
+	while(string3[iter] != '\0') {
+		iter++;
+	}
+	string3_length = iter;	
+	string = (char*) malloc(sizeof(char) * (string1_length + string2_length + string3_length));
+	for(iter = 0; iter < (string1_length + string2_length + string3_length); iter++) {
+		if(iter < string1_length) 
+			string[iter] = string1[iter];
+		if((iter >= string1_length) && (iter < string1_length + string2_length))
+			string[iter] = string2[iter - string1_length];
+		if((iter >= string1_length + string2_length) && (iter < string1_length + string2_length + string3_length))
+			string[iter] = string3[iter - string1_length - string2_length];
+	}
+	return string;
+}
+	
+		
+	
