@@ -115,7 +115,6 @@ void load_level(char* level_name, hero hero) {
 		}
 	}
 	clear();
-	
 		
 }
 	

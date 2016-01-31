@@ -8,9 +8,9 @@ void load_interface(hero hero){
 	const char* MENU_PANEL_UP =      "|              |           |                 |                 |              |";
 	const char* MENU_PANEL_CENTER =  "|  Menu (Esc)  |  Map (M)  |  Inventory (I)  |  Character (C)  |  Skills (K)  |";
 	const char* MENU_PANEL_DOWN =    "|______________|___________|_________________|_________________|______________|________________________________________________________________________________________";
-	const char* HEALTH = "Health:";	
-	const char* MANA = "Mana:";
-	const char* LEVEL = "Level:";
+/*	const char* HEALTH = "Health:";*/	
+/*	const char* MANA = "Mana:";*/
+/*	const char* LEVEL = "Level:";*/
 
 	clear();
 	move(0,0);
@@ -34,12 +34,12 @@ void load_interface(hero hero){
 		printw("_");
 	}
 	
-	mvwprintw(stdscr, 3, 3, "%s", HEALTH);
-	mvwprintw(stdscr, 3, 11, "%u/%u", hero.current_hero_health, hero.max_hero_health);
-	mvwprintw(stdscr, 3, 22, "%s", MANA);
-	mvwprintw(stdscr, 3, 28, "%u/%u", hero.current_hero_mana, hero.max_hero_mana);
-	mvwprintw(stdscr, 3, 38, "%s", LEVEL);
-	mvwprintw(stdscr, 3, 45, "%u", hero.hero_level);
+/*	mvwprintw(stdscr, 3, 3, "%s", HEALTH);*/
+/*	mvwprintw(stdscr, 3, 11, "%u/%u", hero.current_hero_health, hero.max_hero_health);*/
+/*	mvwprintw(stdscr, 3, 22, "%s", MANA);*/
+/*	mvwprintw(stdscr, 3, 28, "%u/%u", hero.current_hero_mana, hero.max_hero_mana);*/
+/*	mvwprintw(stdscr, 3, 38, "%s", LEVEL);*/
+/*	mvwprintw(stdscr, 3, 45, "%u", hero.hero_level);*/
 	
 	refresh();
 }

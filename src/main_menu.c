@@ -34,7 +34,7 @@ void main_menu(){
 
 	/* navigation loop */
 	while(!exit){
-		mvwprintw(stdscr, row-2, 52, "rows: %i, columns: %i",row, col );	
+		/*mvwprintw(stdscr, row-2, 52, "rows: %i, columns: %i",row, col );*/	
 		mvwprintw(stdscr, row-2, 2, "%s", CONTROL_HELP);	
 		if(menu_position == 0) attron(COLOR_PAIR(1));
 		mvwprintw(stdscr, row/2 - 1, col/2 - 5, "%s", NEW_GAME);
@@ -54,7 +54,7 @@ void main_menu(){
 		if((key == 'w') && (menu_position > 0)) menu_position--;
 		if((key == 's') && (menu_position < 2)) menu_position++;
 		if((key == 'e') && (menu_position == 2)) exit = 1;
-		if((key == 'e') && (menu_position == 0)) start();
+		if((key == 'e') && (menu_position == 0)) exit = start();
 		
 	}
 	endwin();

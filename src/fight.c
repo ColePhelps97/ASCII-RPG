@@ -53,6 +53,7 @@ void prepare_screen_for_fight(hero hero, enemy enemy) {
 	for(iter = 0; iter < enemy.picture_length; iter++) {
 		mvwprintw(stdscr, (bottom_border - top_border - enemy.picture_length)/2 + iter, 10, "%s", enemy.enemy_picture[iter]);
 	}
+	mvwprintw(stdscr, (bottom_border - top_border - enemy.picture_length)/2 + enemy.picture_length + 5, 10, "%s", enemy.enemy_welcome_message[0]);
 	move(38, 1);
 	clrtoeol();
 	mvwprintw(stdscr,38, getmaxx(stdscr) - 1, "%s", "|");
