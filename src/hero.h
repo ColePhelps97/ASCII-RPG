@@ -16,6 +16,8 @@ typedef struct hero {
         mana_t max_hero_mana;
         mana_t current_hero_mana;
         level_t hero_level;
+	experience_t hero_exp;
+	attack_t hero_attack;
 } hero;
 
 typedef struct enemy {

@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <ncurses.h>
+#include "constants.h"
 
 void clear_game_screen() {
 	size_t iter;
-	const size_t top_border = 5, bottom_border = 36;
 	for(iter = top_border; iter < bottom_border; iter++) {
 		move(iter, 1);
 		clrtoeol();
