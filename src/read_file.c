@@ -11,11 +11,12 @@ char* read_fline(FILE *file){
 	size_t number_of_chars = 0;
 	while((symbol = fgetc(file)) != '\n') 
 		number_of_chars++;
-	string = (char*) malloc(sizeof(char)*number_of_chars);
+	string = (char*) malloc(sizeof(char)*number_of_chars + 1);
 	fseek(file, -number_of_chars - 1, SEEK_CUR);
 	for(iter = 0; iter < number_of_chars ; iter++) {
 		string[iter] = fgetc(file);
 	}
+	string[number_of_chars] = '\0';
 	getc(file);
 	return string;
 }

@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include "hero.h"
-#include "clear_screen.h"
 #include "constants.h"
-#include "main_interface.h"
+#include "interface.h"
+#include "enemy.h"
 
 
 

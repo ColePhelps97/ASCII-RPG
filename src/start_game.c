@@ -1,10 +1,6 @@
-#include "main_interface.h"
 #include <stdlib.h>
 #include "hero.h"
-#include "load_level.h"
-#include "mystring.h"
-
-
+#include "level.h"
 
 
 int start(){
@@ -15,7 +11,4 @@ int start(){
 	load_level("level3", my_hero);
 	load_level("level4", my_hero);
 	return 1;	
-	
-	
-
 }

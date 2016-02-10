@@ -1,6 +1,7 @@
 #ifndef _FIGHT_H_
 #define _FIGHT_H_
 #include "hero.h"
+#include "enemy.h"
 
 
 

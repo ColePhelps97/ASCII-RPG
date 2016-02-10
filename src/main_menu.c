@@ -1,6 +1,6 @@
 #include <ncurses.h>
 #include <stdlib.h>
-#include "start_game.c"
+#include "start_game.h"
 
 
 
