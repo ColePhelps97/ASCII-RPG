@@ -41,7 +41,7 @@ hero init_hero(){
 	hero.stats.strength = 5;
 	hero.stats.intellect = 5;
 	hero.stats.agility = 5;
-	hero.stats.unspent_points = 0;
+	hero.stats.unspent_points = 10;
 	return hero;
 }
 
