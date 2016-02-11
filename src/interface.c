@@ -8,7 +8,7 @@ void load_interface(){
 
 	clear();
 	
-	
+	box(stdscr, 0, 0);
 	move(0,0);
 	printw(TOP_MENU_PANEL_UP);
 	printw("\n");

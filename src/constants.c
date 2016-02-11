@@ -6,6 +6,7 @@ typedef unsigned int mana_t;
 typedef unsigned int level_t;
 typedef unsigned int experience_t;
 typedef unsigned int attack_t;
+typedef unsigned int stat_t;
 
 const int top_border = 4;
 int bottom_border = 36;
@@ -15,6 +16,15 @@ int bottom_border = 36;
 const char* HEALTH = "Health:";
 const char* MANA = "Mana:";
 const char* LEVEL = "Level:";
+const char* UNSPENT_POINTS = "Unspent points:";
+const char* EXPERIENCE = "Experience:";
+const char* STATS = "STATS";
+const char* STRENGTH = "Strength:";
+const char* INTELLECT = "Intellect:";
+const char* AGILITY = "Agility:";
+const char* SPEND_POINTS = "Spend points (S)";
+const char* SAVE_POINTS = "Save points (S)";
+const char* MORE_INFO = "More info (I)";
 
 const int TOP_MENU_LENGTH = 79;
 const char* TOP_MENU_PANEL_UP =      "|              |           |                 |                 |              |";

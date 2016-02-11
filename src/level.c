@@ -6,6 +6,7 @@
 #include "mystring.h"
 #include "fight.h"
 #include "interface.h"
+#include "top_panel.h"
 
 typedef struct level {
 	char** welcome_message;
@@ -193,6 +194,13 @@ void load_level(char* level_name, hero hero) {
                         case 'q':
                                 is_next_level = 1;
                                 break;
+				
+			case 'c':
+				character_panel(hero); 
+				break;
+			
+			default: 
+				break;
                 }
         }
         clear();
