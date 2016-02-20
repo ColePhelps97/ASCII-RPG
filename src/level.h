@@ -18,5 +18,6 @@ void destroy_level(level* level);
 void load_level(char* level_name, hero* hero);
 void update_variants(level level);
 void prepare_screen_for_level(level level);
+void load_multi_level(char* level_name, hero* hero, int role);
 
 #endif

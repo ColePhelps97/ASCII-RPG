@@ -26,15 +26,12 @@ int host_game() {
         int bytes_read;
 	char* start = "start";
 	char* connect = "connected";
-	/*hero* host_hero;*/
+	hero* host_hero;
         struct sockaddr_in addr;
 
 	buf = (char*) malloc(9*sizeof(char));
 
         listener = socket(AF_INET, SOCK_STREAM, 0);
-        if(listener < 0) {
-		mvwprintw(stdscr, 10, 10, "%s", "listener_error");
-        }
 
         addr.sin_family = AF_INET;
         addr.sin_port = htons(1234);
@@ -50,7 +47,6 @@ int host_game() {
 		sock = accept(listener, NULL, NULL);
 		while(1) {
 			bytes_read = recv(sock, buf, 9, 0);
-			puts(buf);
 			if((bytes_read > 0) && (is_sub_string((char*)buf, connect))) {	
 				send(sock, start, strlen(start), 0);
 				end_of_connection = 1;
@@ -61,19 +57,20 @@ int host_game() {
 	}
 			
 	free(buf);
-	
-	/*host_hero = init_hero();*/
-	/*load_level("level1", host_hero);*/
-	/*load_level("level2", host_hero);*/
-
-	start_game();
 	close(listener);
+	
+	host_hero = init_hero();
+	load_multi_level("level1", host_hero, 1);
+	load_multi_level("level2", host_hero, 1);
+	load_multi_level("level3", host_hero, 1);
+	load_multi_level("level4", host_hero, 1);
+
 	return 1;
 }
 
 int connect_to_game() {
 	int sock;
-	/*hero* client_hero;*/
+	hero* client_hero;
 	char* buf;
 	char* connect_message = "connected";
 	char* start = "start";
@@ -95,14 +92,17 @@ int connect_to_game() {
 	while(1) {
 		send(sock, connect_message, strlen(connect_message), 0);
 		recv(sock, buf, 5, 0);
-		puts(buf);
 		if(is_sub_string((char*)buf, start)) break;
 	}
 	close(sock);
 	free(buf);
-	/*client_hero = init_hero();*/
-	/*load_level("level1", client_hero);*/
-	/*load_level("level2", client_hero);*/
-	start_game();
+
+	client_hero = init_hero();
+
+	load_multi_level("level1", client_hero, 2);
+	load_multi_level("level2", client_hero, 2);
+	load_multi_level("level3", client_hero, 2);
+	load_multi_level("level4", client_hero, 2);
+
 	return 1;
 }
