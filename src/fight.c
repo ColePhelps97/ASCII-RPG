@@ -11,16 +11,16 @@
 
 
 
-void update_info(hero hero, enemy enemy) {
+void update_info(hero* hero, enemy enemy) {
 	move(top_border + 5, getmaxx(stdscr) - 14);
 	clrtoeol();
 	mvwprintw(stdscr, top_border + 5, getmaxx(stdscr) -1, "%s", "|");
-	mvwprintw(stdscr, top_border + 5, getmaxx(stdscr) - 14, "%lu/%lu", hero.current_hero_health, hero.max_hero_health);
+	mvwprintw(stdscr, top_border + 5, getmaxx(stdscr) - 14, "%lu/%lu", hero->current_hero_health, hero->max_hero_health);
 
 	move(top_border + 7, getmaxx(stdscr) - 14);
 	clrtoeol();
 	mvwprintw(stdscr, top_border + 7, getmaxx(stdscr) -1, "%s", "|");
-	mvwprintw(stdscr, top_border + 7, getmaxx(stdscr) - 14, "%lu/%lu", hero.current_hero_mana, hero.max_hero_mana);
+	mvwprintw(stdscr, top_border + 7, getmaxx(stdscr) - 14, "%lu/%lu", hero->current_hero_mana, hero->max_hero_mana);
 
 	move(top_border + 15, getmaxx(stdscr) - 14);
 	clrtoeol();
@@ -31,7 +31,7 @@ void update_info(hero hero, enemy enemy) {
 
 
 
-void prepare_screen_for_fight(hero hero, enemy enemy) {
+void prepare_screen_for_fight(hero* hero, enemy enemy) {
 
 	size_t iter;
 	clear_game_screen();
@@ -43,7 +43,7 @@ void prepare_screen_for_fight(hero hero, enemy enemy) {
 	
 	/* Hero info */
 	mvwprintw(stdscr, top_border + 3, getmaxx(stdscr) - 18, "%s", "You:");
-	mvwprintw(stdscr, top_border + 9, getmaxx(stdscr) - 14, "Damage - %lu", hero.hero_attack);
+	mvwprintw(stdscr, top_border + 9, getmaxx(stdscr) - 14, "Damage - %lu", hero->hero_attack);
 
 
 	/* Enemy info */
@@ -68,7 +68,7 @@ void prepare_screen_for_fight(hero hero, enemy enemy) {
 
 
 	
-void fight(hero hero, enemy enemy) {
+void fight(hero* hero, enemy enemy) {
 	
 	char key;
 	attack_t fireball = 6;
@@ -76,32 +76,32 @@ void fight(hero hero, enemy enemy) {
 
 	prepare_screen_for_fight(hero, enemy);
 
-	while(hero.current_hero_health * enemy.current_enemy_health != 0) {
+	while(hero->current_hero_health * enemy.current_enemy_health != 0) {
 		key = getch();
 		switch(key) {
 			case '1':
-				if((int)hero.current_hero_health - (int)enemy.enemy_attack >= 0) hero.current_hero_health -= enemy.enemy_attack;
-				else { hero.current_hero_health = 0; break;}
-				if((int)enemy.current_enemy_health - (int)hero.hero_attack >= 0) enemy.current_enemy_health -= hero.hero_attack;
+				if((int)hero->current_hero_health - (int)enemy.enemy_attack >= 0) hero->current_hero_health -= enemy.enemy_attack;
+				else { hero->current_hero_health = 0; break;}
+				if((int)enemy.current_enemy_health - (int)hero->hero_attack >= 0) enemy.current_enemy_health -= hero->hero_attack;
 				else { enemy.current_enemy_health = 0; }
 				break;
 			
 			case '2':
-				if((int)hero.current_hero_health - (int)enemy.enemy_attack >= 0) hero.current_hero_health -= enemy.enemy_attack;
-				else { hero.current_hero_health = 0; break;}
+				if((int)hero->current_hero_health - (int)enemy.enemy_attack >= 0) hero->current_hero_health -= enemy.enemy_attack;
+				else { hero->current_hero_health = 0; break;}
 				if((int)enemy.current_enemy_health - (int)fireball >= 0) {
 					enemy.current_enemy_health -= fireball;
-					hero.current_hero_mana -= 50;
+					hero->current_hero_mana -= 50;
 				}
 				else { enemy.current_enemy_health = 0; }
 				break;
 			
 			case '3': 
-				if((int)hero.current_hero_health - (int)enemy.enemy_attack >= 0) hero.current_hero_health -= enemy.enemy_attack;
-				else { hero.current_hero_health = 0; break; }
-				hero.current_hero_mana -= 50;
-				if(hero.current_hero_health + heal <= hero.max_hero_health) hero.current_hero_health += heal;
-				else hero.current_hero_health = hero.max_hero_health;
+				if((int)hero->current_hero_health - (int)enemy.enemy_attack >= 0) hero->current_hero_health -= enemy.enemy_attack;
+				else { hero->current_hero_health = 0; break; }
+				hero->current_hero_mana -= 50;
+				if(hero->current_hero_health + heal <= hero->max_hero_health) hero->current_hero_health += heal;
+				else hero->current_hero_health = hero->max_hero_health;
 				break;
 
 		}

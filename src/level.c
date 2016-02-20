@@ -29,67 +29,68 @@ typedef struct level {
 /* Enemy_name								*/
 
 
-level parse_level(char* level_name) {
-	level level1;
+level* parse_level(char* level_name) {
+	level* level1;
 	char** text;
 	char* str_end, *enemy_name;
 	size_t rows_num, cur_parsing_row = 0, variants_num;
 	size_t iter, iter2;
 	FILE* file = fopen(concat("../levels/", level_name,".level"), "r");
 	text = read_file(file);
+	level1 = (level*) malloc(sizeof(level));
 
 
 	/* Welcome message length */
 	rows_num = strtoul(text[cur_parsing_row], &str_end, 10);
-	level1.wm_length = rows_num;
+	level1->wm_length = rows_num;
 	cur_parsing_row++;
 
 
 	/* Welcome message */
-	level1.welcome_message = (char**) malloc(sizeof(char*) * rows_num);
+	level1->welcome_message = (char**) malloc(sizeof(char*) * rows_num);
 	for(iter = 0; iter < rows_num; iter++) {
-		level1.welcome_message[iter] = text[cur_parsing_row];	
+		level1->welcome_message[iter] = text[cur_parsing_row];	
 		cur_parsing_row++;
 	}
 	
 	/* Number of variants to do */
 	variants_num = strtoul(text[cur_parsing_row], &str_end, 10);
-	level1.number_of_variants = variants_num;
+	level1->number_of_variants = variants_num;
 	cur_parsing_row++;
 
 	/* Variants */
-	level1.variants_to_do = (char**) malloc(sizeof(char*) * variants_num);
-	level1.variants_text = (char***) malloc(sizeof(char*) * variants_num);
+	level1->variants_to_do = (char**) malloc(sizeof(char*) * variants_num);
+	level1->variants_text = (char***) malloc(sizeof(char*) * variants_num);
 	for(iter = 0; iter < variants_num; iter++) {
-		level1.variants_to_do[iter] = text[cur_parsing_row];
+		level1->variants_to_do[iter] = text[cur_parsing_row];
 		cur_parsing_row++;
 	
 		/*Variants text */
 		rows_num = strtoul(text[cur_parsing_row], &str_end, 10);
-		level1.variants_text[iter] = (char**) malloc(sizeof(char*) * (rows_num + 1));
+		level1->variants_text[iter] = (char**) malloc(sizeof(char*) * (rows_num + 1));
 		for(iter2 = 0; iter2 < rows_num	+ 1; iter2++){
-			level1.variants_text[iter][iter2] = text[cur_parsing_row];
+			level1->variants_text[iter][iter2] = text[cur_parsing_row];
 			cur_parsing_row++;	
 		}
 	}
 	
 	enemy_name = text[cur_parsing_row];
 	if(!is_sub_string(enemy_name , "none")) {  
-		level1.level_enemy = parse_enemy(enemy_name);
+		level1->level_enemy = parse_enemy(enemy_name);
 	}
 	fclose(file);
 	return level1;
 
 }
 		
-void destroy_level(level level) {
+void destroy_level(level* level) {
 	size_t iter, variants_num;
-	variants_num = level.number_of_variants;
+	variants_num = level->number_of_variants;
 	for(iter = 0; iter < variants_num; iter++) 
-		free(level.variants_text[iter]);	
-	free(level.variants_text);
-	free(level.variants_to_do);
-	free(level.welcome_message);
+		level->variants_text[iter] = realloc(level->variants_text[iter], 0);	
+	level->variants_text = realloc(level->variants_text, 0);
+	level->variants_to_do = realloc(level->variants_to_do, 0);
+	level->welcome_message = realloc(level->welcome_message, 0);
 }
 
 void update_variants(level level) {
@@ -113,15 +114,15 @@ void prepare_screen_for_level(level level) {
 }
 
 
-void load_level(char* level_name, hero hero) {
+void load_level(char* level_name, hero* hero) {
         size_t iter;
         char key;
         char* end;
         int is_next_level = 0;
-        level level;
+        level* level;
 
         level = parse_level(level_name);
-        prepare_screen_for_level(level);
+        prepare_screen_for_level(*level);
 
         while(!is_next_level) {
                 key = getch();
@@ -129,19 +130,19 @@ void load_level(char* level_name, hero hero) {
 
                         case '1':
                                 clear_game_screen();
-                                if(is_sub_string(level.variants_text[0][1], "show_text") == 1) {
-                                        for(iter = 0; iter < strtoul(level.variants_text[0][0], &end, 10) - 1; iter++){
-                                                mvwprintw(stdscr, iter + 7, 10, "%s", level.variants_text[0][iter+2]);
+                                if(is_sub_string(level->variants_text[0][1], "show_text") == 1) {
+                                        for(iter = 0; iter < strtoul(level->variants_text[0][0], &end, 10) - 1; iter++){
+                                                mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[0][iter+2]);
                                         }
                                 }
 
-                                if(is_sub_string(level.variants_text[0][1], "next_level")) {
+                                if(is_sub_string(level->variants_text[0][1], "next_level")) {
                                         is_next_level = 1;
-                                        destroy_level(level);
+                                        /*destroy_level(&level);*/
                                 }
 
-                                if(is_sub_string(level.variants_text[0][1], "fight")) {
-                                        fight(hero, level.level_enemy);
+                                if(is_sub_string(level->variants_text[0][1], "fight")) {
+                                        fight(hero, level->level_enemy);
                                         getch();
                                         is_next_level = 1;
                                 }
@@ -149,44 +150,44 @@ void load_level(char* level_name, hero hero) {
                                 break;
 
                         case '2':
-                                if(is_sub_string(level.variants_text[1][1], "show_text")) {
-                                        for(iter = 0; iter < strtoul(level.variants_text[1][0], &end, 10) - 1; iter++){
-                                                mvwprintw(stdscr, iter + 7, 10, "%s", level.variants_text[1][iter+2]);
+                                if(is_sub_string(level->variants_text[1][1], "show_text")) {
+                                        for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
+                                                mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
                                         }
                                 }
 
-                                if(is_sub_string(level.variants_text[1][1], "fight")) {
-                                        fight(hero, level.level_enemy);
+                                if(is_sub_string(level->variants_text[1][1], "fight")) {
+                                        fight(hero, level->level_enemy);
                                         getch();
                                         is_next_level = 1;
                                 }
 
 
-                                if(is_sub_string(level.variants_text[1][1], "next_level")) {
+                                if(is_sub_string(level->variants_text[1][1], "next_level")) {
                                         is_next_level = 1;
-                                        destroy_level(level);
+                                        /*destroy_level(&level);*/
                                 }
 
                                 break;
 
 
                         case '3':
-                                if(is_sub_string(level.variants_text[2][1], "show_text")) {
-                                        for(iter = 0; iter < strtoul(level.variants_text[2][0], &end, 10) - 1; iter++){
-                                                mvwprintw(stdscr, iter + 7, 10, "%s", level.variants_text[2][iter+2]);
+                                if(is_sub_string(level->variants_text[2][1], "show_text")) {
+                                        for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
+                                                mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
                                         }
                                 }
 
-                                if(is_sub_string(level.variants_text[2][1], "fight")) {
-                                        fight(hero, level.level_enemy);
+                                if(is_sub_string(level->variants_text[2][1], "fight")) {
+                                        fight(hero, level->level_enemy);
                                         getch();
                                         is_next_level = 1;
                                 }
 
 
-                                if(is_sub_string(level.variants_text[2][1], "next_level")) {
+                                if(is_sub_string(level->variants_text[2][1], "next_level")) {
                                         is_next_level = 1;
-                                        destroy_level(level);
+                                        /*destroy_level(&level);*/
                                 }
 
                                 break;

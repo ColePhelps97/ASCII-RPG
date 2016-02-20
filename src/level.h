@@ -13,9 +13,9 @@ typedef struct level {
 	enemy level_enemy;
 } level;
  
-level parse_level(char* level_name);
-void destroy_level(level level);
-void load_level(char* level_name, hero hero);
+level* parse_level(char* level_name);
+void destroy_level(level* level);
+void load_level(char* level_name, hero* hero);
 void update_variants(level level);
 void prepare_screen_for_level(level level);
 
