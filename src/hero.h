@@ -3,33 +3,24 @@
 #include <stdlib.h>
 #include "constants.h"
 
-typedef struct stats {
-        stat_t strength;
-        stat_t intellect;
-        stat_t agility;
-        stat_t unspent_points;
-} stats_t;
-
-
 typedef struct {
-	health_t max_hero_health;
-        health_t current_hero_health;
-        mana_t max_hero_mana;
-        mana_t current_hero_mana;
-        level_t hero_level;
-        stat_t strength;
-        stat_t intellect;
-        stat_t agility;
-        stat_t unspent_points;
-	attack_t hero_attack;
-	experience_t hero_exp;
-        /*stats_t* stats;*/
 
-} hero;
+	health_t max_health;
+	health_t health;
 
-hero* init_hero();
+   	mana_t max_mana;
+    mana_t mana;
 
-void hero_up(hero* hero);
+    person_level_t level;
+
+	attack_t attack;
+
+	experience_t exp;
+
+} hero_t;
+
+hero_t* init_hero();
+
+void hero_up(hero_t* hero);
 	
-
 #endif

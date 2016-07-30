@@ -38,7 +38,7 @@ char** read_file(FILE *file) {
 	char** string_array;
 	fseek(file, 0, SEEK_SET);
 	number_of_rows = count_frows(file);
-	string_array = calloc(sizeof(char*), number_of_rows);
+	string_array = malloc(sizeof(char*)*number_of_rows);
 	for(iter = 0; iter < number_of_rows; iter++) {
 		string_array[iter] = read_fline(file);
 	}

@@ -2,6 +2,6 @@
 #define _TOP_PANEL_H_
 #include "hero.h"
 
-void character_panel(hero* hero);
+void character_panel(hero_t* hero);
 
 #endif

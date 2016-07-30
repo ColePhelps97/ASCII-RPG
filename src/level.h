@@ -4,20 +4,21 @@
 #include "hero.h"
 #include "enemy.h"
 
-typedef struct level {
+typedef struct {
 	char** welcome_message;
 	size_t wm_length;
+
 	char** variants_to_do;
 	size_t number_of_variants;
 	char*** variants_text;
-	enemy level_enemy;
-} level;
+
+	enemy_t enemy;
+} level_t;
  
-level* parse_level(char* level_name);
-void destroy_level(level* level);
-void load_level(char* level_name, hero* hero);
-void update_variants(level level);
-void prepare_screen_for_level(level level);
-void load_multi_level(char* level_name, hero* hero, int role);
+level_t* parse_level(char* level_name);
+void destroy_level(level_t* level);
+int load_level(char* level_name, hero_t* hero);
+void update_variants(level_t level);
+void prepare_screen_for_level(level_t level);
 
 #endif

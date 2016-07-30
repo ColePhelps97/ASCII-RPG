@@ -1,4 +1,4 @@
 all:
-	gcc top_panel.c start_game.c interface.c enemy.c fight.c constants.c mystring.c main_menu.c hero.c read_file.c level.c -o menu -ansi -pedantic -Wall -Werror -lpanel -lncurses
+	gcc start_game.c interface.c enemy.c constants.c mystring.c main_menu.c hero.c read_file.c level.c fight.c top_panel.c -o menu -ansi -pedantic -Wall -Werror -lpanel -lncurses
 clean:
 	rm menu

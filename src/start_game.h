@@ -3,8 +3,4 @@
 
 int start_game();
 
-int host_game();
-
-int connect_to_game();
-
 #endif

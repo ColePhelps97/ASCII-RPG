@@ -5,11 +5,17 @@
 
 
 
-void update_info(hero* hero, enemy enemy);
+void update_info(hero_t* hero, enemy_t* enemy);
 
-void prepare_screen_for_fight(hero* hero, enemy enemy);
+void prepare_screen_for_fight(hero_t* hero, enemy_t* enemy);
 
-void fight(hero* hero, enemy enemy);
+int fight(hero_t* hero, enemy_t* enemy);
+
+int enemy_base_attack(enemy_t* enemy, hero_t* hero);
+
+int hero_base_attack(hero_t* hero, enemy_t* enemy);
+int hero_fireball_attack(hero_t* hero, enemy_t* enemy);
+int hero_selfheal(hero_t* hero); 
 
 
 #endif

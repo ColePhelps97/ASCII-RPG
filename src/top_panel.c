@@ -4,9 +4,9 @@
 #include "hero.h"
 #include "constants.h"
 
-void spend_points(WINDOW* spend_window, PANEL* spend_panel, WINDOW* zero_points_window, PANEL* zero_points_panel, hero* hero);
+void spend_points(WINDOW* spend_window, PANEL* spend_panel, WINDOW* zero_points_window, PANEL* zero_points_panel, hero_t* hero);
 
-void character_panel(hero* hero) {
+void character_panel(hero_t* hero) {
 	char key;
 	size_t iter;
 	int exit = 0; 
@@ -42,14 +42,14 @@ void character_panel(hero* hero) {
 	}
 	
 
-	mvwprintw(window, 1, 2, "%s                    %s %lu", "Player", LEVEL, hero->hero_level);
-	mvwprintw(window, 4, 3, "%s          %lu/%lu", HEALTH, hero->current_hero_health, hero->max_hero_health);
-	mvwprintw(window, 5, 3, "%s            %lu/%lu", MANA, hero->current_hero_mana, hero->max_hero_mana);
-	mvwprintw(window, 6, 3, "%s       %lu/%lu", EXPERIENCE, hero->hero_exp, 100);
-	mvwprintw(window, 9, 3, "%s        %s%lu", STATS,UNSPENT_POINTS, hero->unspent_points);
-	mvwprintw(window, 11, 3, "%s               %lu", STRENGTH, hero->strength);
-	mvwprintw(window, 12, 3, "%s              %lu", INTELLECT, hero->intellect);
-	mvwprintw(window, 13, 3, "%s                %lu", AGILITY, hero->agility);
+	mvwprintw(window, 1, 2, "%s                    %s %lu", "Player", LEVEL, hero->level);
+	mvwprintw(window, 4, 3, "%s          %lu/%lu", HEALTH, hero->health, hero->max_health);
+	mvwprintw(window, 5, 3, "%s            %lu/%lu", MANA, hero->mana, hero->max_mana);
+	mvwprintw(window, 6, 3, "%s       %lu/%lu", EXPERIENCE, hero->exp, 100);
+	/*mvwprintw(window, 9, 3, "%s        %s%lu", STATS,UNSPENT_POINTS, hero->unspent_points);*/
+	/*mvwprintw(window, 11, 3, "%s               %lu", STRENGTH, hero->strength);*/
+	/*mvwprintw(window, 12, 3, "%s              %lu", INTELLECT, hero->intellect);*/
+	/*mvwprintw(window, 13, 3, "%s                %lu", AGILITY, hero->agility);*/
 	mvwprintw(window, 17, 22, "%s", SPEND_POINTS);
 	
 	
@@ -88,7 +88,7 @@ void character_panel(hero* hero) {
 }
 		
 	
-void paint_spend_window(WINDOW* spend_window, PANEL* spend_panel, hero* hero) {
+void paint_spend_window(WINDOW* spend_window, PANEL* spend_panel, hero_t* hero) {
 	size_t iter1, iter2;
 
 	box(spend_window, 0, 0);
@@ -97,10 +97,10 @@ void paint_spend_window(WINDOW* spend_window, PANEL* spend_panel, hero* hero) {
 			mvwprintw(spend_window, iter2, iter1, " ");
 
 
-	mvwprintw(spend_window, 2, 3, "%s        %s%lu", STATS,UNSPENT_POINTS, hero->unspent_points);
-        mvwprintw(spend_window, 4, 3, "%s               %lu", STRENGTH, hero->strength);
-        mvwprintw(spend_window, 5, 3, "%s              %lu", INTELLECT, hero->intellect);
-        mvwprintw(spend_window, 6, 3, "%s                %lu", AGILITY, hero->agility);
+	/*mvwprintw(spend_window, 2, 3, "%s        %s%lu", STATS,UNSPENT_POINTS, hero->unspent_points);*/
+        /*mvwprintw(spend_window, 4, 3, "%s               %lu", STRENGTH, hero->strength);*/
+        /*mvwprintw(spend_window, 5, 3, "%s              %lu", INTELLECT, hero->intellect);*/
+        /*mvwprintw(spend_window, 6, 3, "%s                %lu", AGILITY, hero->agility);*/
 
 	top_panel(spend_panel);
 	update_panels();
@@ -128,11 +128,11 @@ void have_no_points(WINDOW* zero_points_window, PANEL* zero_points_panel) {
 	
 }
 
-void spend_points(WINDOW* spend_window, PANEL* spend_panel, WINDOW* zero_points_window, PANEL* zero_points_panel, hero* hero) {
+void spend_points(WINDOW* spend_window, PANEL* spend_panel, WINDOW* zero_points_window, PANEL* zero_points_panel, hero_t* hero) {
 	int end_of_spend = 0;
 	char key;
-	stat_t points , strength_added = 0, intellect_added = 0, agility_added = 0;
-	points = hero->unspent_points;
+	/*stat_t points , strength_added = 0, intellect_added = 0, agility_added = 0;*/
+	/*points = hero->unspent_points;*/
 		
 	
 	show_panel(spend_panel);
@@ -145,52 +145,52 @@ void spend_points(WINDOW* spend_window, PANEL* spend_panel, WINDOW* zero_points_
 		switch(key) {
 			case 's':
 				
-				if(hero->unspent_points > 0) {
-					hero->strength ++;
-					hero->unspent_points--;				
-					strength_added ++;
+				/*if(hero->unspent_points > 0) {*/
+					/*hero->strength ++;*/
+					/*hero->unspent_points--;*/
+					/*strength_added ++;*/
 					paint_spend_window(spend_window, spend_panel, hero);
-				}
+				/*}*/
 				
-				else {		
+				/*else {*/
 					have_no_points(zero_points_window, zero_points_panel);
 					update_panels();
 					doupdate();
-				}
+				/*}*/
 	
 				break;
 	
 			case 'a':
 
-				if(hero->unspent_points > 0) {
-					hero->agility ++;
-					hero->unspent_points--;				
-					agility_added++;
+				/*if(hero->unspent_points > 0) {*/
+					/*hero->agility ++;*/
+					/*hero->unspent_points--;	*/
+					/*agility_added++;*/
 					paint_spend_window(spend_window, spend_panel, hero);
-				}
+				/*}*/
 	
-				else {		
+				/*else {		*/
 					have_no_points(zero_points_window, zero_points_panel);
 					update_panels();
 					doupdate();
-				}
+				/*}*/
 					
 				break;
 	
 			case 'i':
 
-				if(hero->unspent_points > 0) {
-					hero->intellect ++;
-					hero->unspent_points--;				
-					intellect_added++;
-					paint_spend_window(spend_window, spend_panel, hero);
-				}
+				/*if(hero->unspent_points > 0) {*/
+				/*hero->intellect ++;*/
+				/*hero->unspent_points--;*/
+				/*intellect_added++;*/
+				/*paint_spend_window(spend_window, spend_panel, hero);*/
+				/*}*/
 	
-				else {		
+				/*else {*/
 					have_no_points(zero_points_window, zero_points_panel);
 					update_panels();
 					doupdate();
-				}
+				/*}*/
 					
 				break;
 				
@@ -199,10 +199,10 @@ void spend_points(WINDOW* spend_window, PANEL* spend_panel, WINDOW* zero_points_
 				break;
 			
 			case 'c':
-				hero->unspent_points = points;
-				hero->strength -= strength_added;
-				hero->intellect -= intellect_added;
-				hero->agility -= agility_added;
+				/*hero->unspent_points = points;*/
+				/*hero->strength -= strength_added;*/
+				/*hero->intellect -= intellect_added;*/
+				/*hero->agility -= agility_added;*/
 				end_of_spend = 1;
 				break;
 					
@@ -212,12 +212,4 @@ void spend_points(WINDOW* spend_window, PANEL* spend_panel, WINDOW* zero_points_
 	update_panels();
 	doupdate();
 }
-
-
-
-
-
-
-
-
 
