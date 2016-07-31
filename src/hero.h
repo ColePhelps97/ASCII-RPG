@@ -4,6 +4,13 @@
 #include "constants.h"
 
 typedef struct {
+	stat_t strength;
+	stat_t agility;
+	stat_t intellect;
+	stat_t unspent_points;
+} stats_t;
+
+typedef struct {
 
 	health_t max_health;
 	health_t health;
@@ -16,11 +23,15 @@ typedef struct {
 	attack_t attack;
 
 	experience_t exp;
+	
+	stats_t* stats;
 
 } hero_t;
 
 hero_t* init_hero();
 
 void hero_up(hero_t* hero);
+
+void hero_update_stats(hero_t* hero);
 	
 #endif

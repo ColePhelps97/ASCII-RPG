@@ -140,7 +140,6 @@ int load_level(char* level_name, hero_t* hero) {
         level_t* level;
         level = parse_level(level_name);
         prepare_screen_for_level(level);
-		if(hero->attack == 1) puts("ok");
 
         while(!is_next_level) {
                 key = getch();

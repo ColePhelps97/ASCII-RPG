@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "interface.h"
 #include "enemy.h"
+#include "top_panel.h"
 
 /* Updates hero and enemy health and mana bars */
 
@@ -160,6 +161,10 @@ int fight(hero_t* hero, enemy_t* enemy) {
 				if(!hero_selfheal(hero)) break;
 				/* Enemy's turn */
 				if(!enemy_base_attack(enemy, hero)) break;
+				break;
+			
+			case 'c':
+				character_panel(hero);
 				break;
 
 		}

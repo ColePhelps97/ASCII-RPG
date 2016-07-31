@@ -25,6 +25,9 @@ const char* AGILITY;
 const char* SPEND_POINTS; 
 const char* SAVE_POINTS; 
 const char* MORE_INFO; 
+const char* CANCEL;
+const char* OK_MESSAGE;
+const char* CLOSE;
 
 
 #endif
