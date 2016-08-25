@@ -25,6 +25,8 @@ typedef struct {
 
 	experience_t exp;
 	
+	gold_t gold;
+	
 	defense_t defense;
 	evasion_t evasion;
 

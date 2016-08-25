@@ -127,7 +127,7 @@ void paint_spend_window(WINDOW* spend_window, PANEL* spend_panel, hero_t* hero) 
 	mvwprintw(spend_window, 6, 3, "%s                %lu", AGILITY, hero->stats->agility);
 	mvwprintw(spend_window, 8, 5, "%s", OK_MESSAGE);
 	mvwprintw(spend_window, 8, 22, "%s", CANCEL);
-	mvwprintw(spend_window, 10, 15, "%s", MORE_INFO);
+	mvwprintw(spend_window, 10, 15, "%s", HELP);
 
 	
 

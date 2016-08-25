@@ -24,6 +24,8 @@ typedef struct {
 	attack_t attack;
 
 	experience_t exp;
+
+	gold_t gold;
 	
 
 	defense_t defense;
@@ -56,6 +58,8 @@ hero_t* init_hero(){
 	hero->attack = 1;
 
 	hero->exp = 0;
+	
+	hero->gold = 0;
 	
 	hero->defense = 0;
 	

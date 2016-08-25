@@ -27,7 +27,7 @@ const char* INTELLECT;
 const char* AGILITY; 
 const char* SPEND_POINTS; 
 const char* SAVE_POINTS; 
-const char* MORE_INFO; 
+const char* HELP; 
 const char* CANCEL;
 const char* OK_MESSAGE;
 const char* CLOSE;
@@ -38,6 +38,7 @@ const char* SELL;
 const char* DROP;
 const char* EQUIP;
 const char* USE;
+const char* MORE;
 
 
 #endif

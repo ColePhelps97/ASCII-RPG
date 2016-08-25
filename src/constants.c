@@ -26,7 +26,7 @@ const char* INTELLECT = "Intellect:";
 const char* AGILITY = "Agility:";
 const char* SPEND_POINTS = "Spend points (S)";
 const char* SAVE_POINTS = "Save points (S)";
-const char* MORE_INFO = "Help (H)";
+const char* HELP = "Help (H)";
 const char* CANCEL = "Cancel (C)";
 const char* OK_MESSAGE = "Ok (O)";
 const char* CLOSE = "Close (C)";
@@ -37,6 +37,7 @@ const char* SELL = "Sell (S)";
 const char* DROP = "Drop (D)";
 const char* EQUIP = "Equip (E)";
 const char* USE = "Use (U)";
+const char* MORE = "More (M)";
 
 const int TOP_MENU_LENGTH = 79;
 const char* TOP_MENU_PANEL_UP =      "|              |           |                 |                 |              |";
