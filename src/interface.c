@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <panel.h>
 #include <stdlib.h>
 #include "constants.h"
 
@@ -48,6 +49,41 @@ void clear_game_screen() {
                 clrtoeol();
                 mvwprintw(stdscr, iter, getmaxx(stdscr) - 1, "%s", "|");
         }
+}
+
+
+void already_max_hp_warning(void) {
+    WINDOW* warning_window;
+    PANEL* warning_panel;
+
+    warning_window = newwin(10, 20, 10, 20);
+    warning_panel = new_panel(warning_window);
+
+    box(warning_window, 0, 0);
+    mvwprintw(warning_window, 1, 1, "%s", "You have already maximum health");
+    top_panel(warning_panel);
+
+    getch();
+
+    del_panel(warning_panel);
+    delwin(warning_window);
+}
+
+void already_max_mp_warning(void) {
+    WINDOW* warning_window;
+    PANEL* warning_panel;
+
+    warning_window = newwin(10, 20, 10, 20);
+    warning_panel = new_panel(warning_window);
+
+    box(warning_window, 0, 0);
+    mvwprintw(warning_window, 1, 1, "%s", "You have already maximum mana");
+    top_panel(warning_panel);
+
+    getch();
+
+    del_panel(warning_panel);
+    delwin(warning_window);
 }
 
 	

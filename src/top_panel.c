@@ -11,6 +11,7 @@ void paint_character_window(WINDOW* window, PANEL* panel, hero_t* hero);
 void character_panel(hero_t* hero) {
 	char key;
 	int exit = 0; 
+	
 
 	WINDOW* window;
 	PANEL* panel;
@@ -63,8 +64,6 @@ void character_panel(hero_t* hero) {
 		}
 	}
 
-
-	
 	/*hide_panel(panel);*/
 	del_panel(zero_points_panel);	
 	delwin(zero_points_window);

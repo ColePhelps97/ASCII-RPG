@@ -26,6 +26,10 @@ void update_info(hero_t* hero, enemy_t* enemy) {
 	mvwprintw(stdscr, top_border + 15, getmaxx(stdscr) -1, "%s", "|");
 	mvwprintw(stdscr, top_border + 15, getmaxx(stdscr) - 14, "%lu/%lu", enemy->health, enemy->max_health);
 	
+	move(top_border + 9, getmaxx(stdscr) - 14);
+	clrtoeol();
+	mvwprintw(stdscr, top_border + 9, getmaxx(stdscr) -1, "%s", "|");
+	mvwprintw(stdscr, top_border + 9, getmaxx(stdscr) - 14, "Damage - %lu", hero->attack);
 }
 
 
@@ -42,7 +46,6 @@ void prepare_screen_for_fight(hero_t* hero, enemy_t* enemy) {
 	
 	/* Hero info */
 	mvwprintw(stdscr, top_border + 3, getmaxx(stdscr) - 18, "%s", "You:");
-	mvwprintw(stdscr, top_border + 9, getmaxx(stdscr) - 14, "Damage - %lu", hero->attack);
 
 
 	/* Enemy info */
@@ -171,14 +174,14 @@ int fight(hero_t* hero, enemy_t* enemy) {
 		update_info(hero, enemy);
 	}
 	/* Take exp and try to lvl up*/
-	hero->exp += enemy->exp;
-	hero_up(hero);
 	
 	clear_game_screen();
 	move(38, 1);
 	clrtoeol();
 	mvwprintw(stdscr,38, getmaxx(stdscr) - 1, "%s", "|");
 	if(hero-> health > 0) {
+		hero->exp += enemy->exp;
+		hero_up(hero);
 		mvwprintw(stdscr, (bottom_border - top_border)/2, getmaxx(stdscr)/2, "%s", "YOU WIN!!!");
 		mvwprintw(stdscr, (bottom_border - top_border)/2 + 1, getmaxx(stdscr)/2, "%s", "Press any key to go next level...");
 		getch();

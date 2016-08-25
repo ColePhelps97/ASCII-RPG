@@ -6,6 +6,9 @@ typedef unsigned int person_level_t;
 typedef unsigned int experience_t;
 typedef unsigned int attack_t;
 typedef unsigned int stat_t;
+typedef unsigned int gold_t;
+typedef unsigned int defense_t;
+typedef float evasion_t;
 
 const int top_border = 4;
 int bottom_border = 36;
@@ -27,6 +30,13 @@ const char* MORE_INFO = "Help (H)";
 const char* CANCEL = "Cancel (C)";
 const char* OK_MESSAGE = "Ok (O)";
 const char* CLOSE = "Close (C)";
+const char* WEAPON_INVENTORY = "Weapon inventory (W)";
+const char* ARMOR_INVENTORY = "Armor inventory (A)";
+const char* POITION_INVENTORY = "Poition inventory (P)";
+const char* SELL = "Sell (S)";
+const char* DROP = "Drop (D)";
+const char* EQUIP = "Equip (E)";
+const char* USE = "Use (U)";
 
 const int TOP_MENU_LENGTH = 79;
 const char* TOP_MENU_PANEL_UP =      "|              |           |                 |                 |              |";

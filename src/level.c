@@ -12,6 +12,7 @@
 #include "hero.h"
 #include "fight.h"
 #include "top_panel.h"
+#include "inventory.h"
 
 typedef struct {
 	char** welcome_message;
@@ -144,86 +145,88 @@ int load_level(char* level_name, hero_t* hero) {
         while(!is_next_level) {
                 key = getch();
                 switch(key) {
+                	case '1':
+							if(level->number_of_variants >= 1) {
+								clear_game_screen();
 
-                        case '1':
-								if(level->number_of_variants >= 1) {
+								if(is_sub_string(level->variants_text[0][1], "show_text") == 1) {
+										for(iter = 0; iter < strtoul(level->variants_text[0][0], &end, 10) - 1; iter++){
+												mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[0][iter+2]);
+										}
+								}
+
+								if(is_sub_string(level->variants_text[0][1], "next_level")) {
+										is_next_level = 1;
+										destroy_level(level);
+								}
+
+								if(is_sub_string(level->variants_text[0][1], "fight")) {
+										game_over = !fight(hero, (enemy_t*)level->enemy);
+										is_next_level = 1;
+								}
+							}
+
+							break;
+
+					case '2':
+							if(level->number_of_variants >= 2) {
+
+								if(is_sub_string(level->variants_text[1][1], "show_text")) {
+										for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
+												mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
+										}
+								}
+
+								if(is_sub_string(level->variants_text[1][1], "fight")) {
+										game_over = !fight(hero, (enemy_t*)level->enemy);
+										is_next_level = 1;
+								}
+
+
+								if(is_sub_string(level->variants_text[1][1], "next_level")) {
+										is_next_level = 1;
+										destroy_level(level);
+								}
+
+							}
+
+							break;
+
+
+					case '3':
+							if(level->number_of_variants >= 3) {
+
+								if(is_sub_string(level->variants_text[2][1], "show_text")) {
+										for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
+												mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
+										}
+								}
+
+								if(is_sub_string(level->variants_text[2][1], "fight")) {
+										game_over = !fight(hero, (enemy_t*)level->enemy);
+										is_next_level = 1;
+								}
+
+
+								if(is_sub_string(level->variants_text[2][1], "next_level")) {
+										is_next_level = 1;
+										destroy_level(level);
+								}
+		
+							}
+
+							break;
+
+					case 'q':
+							is_next_level = 1;
+							break;
 			
-									clear_game_screen();
-
-									if(is_sub_string(level->variants_text[0][1], "show_text") == 1) {
-											for(iter = 0; iter < strtoul(level->variants_text[0][0], &end, 10) - 1; iter++){
-													mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[0][iter+2]);
-											}
-									}
-
-									if(is_sub_string(level->variants_text[0][1], "next_level")) {
-											is_next_level = 1;
-											destroy_level(level);
-									}
-
-									if(is_sub_string(level->variants_text[0][1], "fight")) {
-											game_over = !fight(hero, (enemy_t*)level->enemy);
-											is_next_level = 1;
-									}
-								}
-
-                                break;
-
-                        case '2':
-								if(level->number_of_variants >= 2) {
-
-									if(is_sub_string(level->variants_text[1][1], "show_text")) {
-											for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
-													mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
-											}
-									}
-
-									if(is_sub_string(level->variants_text[1][1], "fight")) {
-											game_over = !fight(hero, (enemy_t*)level->enemy);
-											is_next_level = 1;
-									}
-
-
-									if(is_sub_string(level->variants_text[1][1], "next_level")) {
-											is_next_level = 1;
-											destroy_level(level);
-									}
-
-								}
-
-                                break;
-
-
-                        case '3':
-								if(level->number_of_variants >= 3) {
-
-									if(is_sub_string(level->variants_text[2][1], "show_text")) {
-											for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
-													mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
-											}
-									}
-
-									if(is_sub_string(level->variants_text[2][1], "fight")) {
-											game_over = !fight(hero, (enemy_t*)level->enemy);
-											is_next_level = 1;
-									}
-
-
-									if(is_sub_string(level->variants_text[2][1], "next_level")) {
-											is_next_level = 1;
-											destroy_level(level);
-									}
-			
-								}
-
-                                break;
-
-                        case 'q':
-                                is_next_level = 1;
-                                break;
-				
 			case 'c':
 				character_panel(hero);
+				break;
+			
+			case 'i':
+				inventory_panel(hero->weapon_inventory);
 				break;
 			
 			default: 

@@ -8,6 +8,9 @@ typedef unsigned int person_level_t;
 typedef unsigned int experience_t;
 typedef unsigned int attack_t;
 typedef unsigned int stat_t;
+typedef unsigned int defense_t;
+typedef unsigned int gold_t;
+typedef float evasion_t;
 
 
 const int top_border;
@@ -28,6 +31,13 @@ const char* MORE_INFO;
 const char* CANCEL;
 const char* OK_MESSAGE;
 const char* CLOSE;
+const char* WEAPON_INVENTORY;
+const char* ARMOR_INVENTORY;
+const char* POITION_INVENTORY;
+const char* SELL;
+const char* DROP;
+const char* EQUIP;
+const char* USE;
 
 
 #endif

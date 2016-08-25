@@ -2,6 +2,7 @@
 #define _HERO_H_
 #include <stdlib.h>
 #include "constants.h"
+#include "inventory.h"
 
 typedef struct {
 	stat_t strength;
@@ -23,6 +24,11 @@ typedef struct {
 	attack_t attack;
 
 	experience_t exp;
+	
+	defense_t defense;
+	evasion_t evasion;
+
+	weapon_inventory_t* weapon_inventory;
 	
 	stats_t* stats;
 
