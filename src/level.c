@@ -11,8 +11,8 @@
 #include "enemy.h"
 #include "hero.h"
 #include "fight.h"
-#include "top_panel.h"
-#include "inventory.h"
+#include "character_panel.h"
+#include "inventory_panel.h"
 
 typedef struct {
 	char** welcome_message;
@@ -226,7 +226,7 @@ int load_level(char* level_name, hero_t* hero) {
 				break;
 			
 			case 'i':
-				inventory_panel(hero->weapon_inventory);
+				inventory_panel(hero, hero->weapon_inventory);
 				break;
 			
 			default: 
@@ -238,7 +238,3 @@ int load_level(char* level_name, hero_t* hero) {
 		if(!game_over) return 1;
 		else return 0;
 }
-
-/*-------------------------------------------------------------------------------------*/
-/* READED */
-/* ------------------------------------------------------------------------------------*/

@@ -6,7 +6,7 @@
 #include "constants.h"
 #include "interface.h"
 #include "enemy.h"
-#include "top_panel.h"
+#include "character_panel.h"
 
 /* Updates hero and enemy health and mana bars */
 

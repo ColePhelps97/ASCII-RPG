@@ -31,6 +31,7 @@ typedef struct {
 	evasion_t evasion;
 
 	weapon_inventory_t* weapon_inventory;
+	armor_inventory_t* armor_inventory;
 	
 	stats_t* stats;
 

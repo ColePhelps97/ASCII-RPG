@@ -32,6 +32,7 @@ typedef struct {
 	evasion_t evasion;
 
 	weapon_inventory_t* weapon_inventory;
+	armor_inventory_t* armor_inventory;
 	
 	stats_t* stats;
 } hero_t;
@@ -66,6 +67,7 @@ hero_t* init_hero(){
 	hero->evasion = 1;
 
 	hero->weapon_inventory = init_weapon_inventory();
+	hero->armor_inventory = init_armor_inventory();
 
 	hero->stats->strength = 3;
 	hero->stats->agility = 3;
@@ -107,6 +109,7 @@ void hero_update_stats(hero_t* hero) {
 	if(hero->mana == prev_max_mana) hero->mana= hero->max_mana;
 }
 
+/*void hero_update_equiped_items(*/
 void equip_weapon(hero_t* hero, weapon_item_t* weapon) {
     if(!weapon->is_equiped) {
         /*hero->equiped_weapon->is_equiped = 0;*/

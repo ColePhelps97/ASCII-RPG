@@ -39,6 +39,8 @@ const char* DROP;
 const char* EQUIP;
 const char* USE;
 const char* MORE;
+const char* PRICE;
+const char* ATTACK;
 
 
 #endif

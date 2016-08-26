@@ -37,7 +37,9 @@ const char* SELL = "Sell (S)";
 const char* DROP = "Drop (D)";
 const char* EQUIP = "Equip (E)";
 const char* USE = "Use (U)";
-const char* MORE = "More (M)";
+const char* MORE = "More info (M)";
+const char* ATTACK = "Attack:";
+const char* PRICE = "Price:";
 
 const int TOP_MENU_LENGTH = 79;
 const char* TOP_MENU_PANEL_UP =      "|              |           |                 |                 |              |";
