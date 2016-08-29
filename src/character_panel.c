@@ -38,7 +38,7 @@ void character_panel(hero_t* hero) {
 	hide_panel(zero_points_panel);
 	hide_panel(info_panel);
 
-	window = newwin(20, 40, 3, 40);
+	window = newwin(25, 40, 3, 40);
 	box(window, 0 ,0);
 	panel = new_panel(window);
 
@@ -84,21 +84,24 @@ void paint_character_window(WINDOW* window, PANEL* panel, hero_t* hero) {
 
 	for(iter = 1; iter < getmaxx(window) - 1; iter++) {
 		mvwprintw(window, 2, iter, "%s", "_");
-		mvwprintw(window, 7, iter, "%s", "_");
-		mvwprintw(window, 16, iter, "%s", "_");
+		mvwprintw(window, 10, iter, "%s", "_");
+		mvwprintw(window, 20, iter, "%s", "_");
 	}
 	
 
 	mvwprintw(window, 1, 2, "%s                    %s %lu", "Player", LEVEL, hero->level);
-	mvwprintw(window, 4, 3, "%s          %lu/%lu", HEALTH, hero->health, hero->max_health);
-	mvwprintw(window, 5, 3, "%s            %lu/%lu", MANA, hero->mana, hero->max_mana);
-	mvwprintw(window, 6, 3, "%s       %lu/%lu", EXPERIENCE, hero->exp, 100);
-	mvwprintw(window, 9, 3, "%s        %s%lu", STATS,UNSPENT_POINTS, hero->stats->unspent_points);
-	mvwprintw(window, 11, 3, "%s               %lu", STRENGTH, hero->stats->strength);
-	mvwprintw(window, 12, 3, "%s              %lu", INTELLECT, hero->stats->intellect);
-	mvwprintw(window, 13, 3, "%s                %lu", AGILITY, hero->stats->agility);
-	mvwprintw(window, 17, 2, "%s", SPEND_POINTS);
-	mvwprintw(window, 17, 27, "%s", CLOSE);
+	mvwprintw(window, 4, 3, "%s                  %lu/%lu", HEALTH, hero->health, hero->max_health);
+	mvwprintw(window, 5, 3, "%s                    %lu/%lu", MANA, hero->mana, hero->max_mana);
+	mvwprintw(window, 6, 3, "%s                        %lu", ATTACK, hero->attack);
+	mvwprintw(window, 7, 3, "%s                       %lu", DEFENSE, hero->defense);
+	mvwprintw(window, 8, 3, "%s                       %d", EVASION, hero->evasion);
+	mvwprintw(window, 9, 3, "%s               %lu/%lu", EXPERIENCE, hero->exp, 100);
+	mvwprintw(window, 12, 3, "%s        %s%lu", STATS,UNSPENT_POINTS, hero->stats->unspent_points);
+	mvwprintw(window, 14, 3, "%s               %lu", STRENGTH, hero->stats->strength);
+	mvwprintw(window, 15, 3, "%s              %lu", INTELLECT, hero->stats->intellect);
+	mvwprintw(window, 16, 3, "%s                %lu", AGILITY, hero->stats->agility);
+	mvwprintw(window, 22, 2, "%s", SPEND_POINTS);
+	mvwprintw(window, 22, 27, "%s", CLOSE);
 	
 	update_panels();
 	doupdate();

@@ -34,6 +34,9 @@ typedef struct {
 	weapon_inventory_t* weapon_inventory;
 	armor_inventory_t* armor_inventory;
 	
+	weapon_item_t* equipped_weapon;
+	armor_item_t* equipped_armor;
+	
 	stats_t* stats;
 } hero_t;
 
@@ -62,12 +65,15 @@ hero_t* init_hero(){
 	
 	hero->gold = 0;
 	
-	hero->defense = 0;
+	hero->defense = 1;
 	
-	hero->evasion = 1;
+	hero->evasion = 0;
 
 	hero->weapon_inventory = init_weapon_inventory();
 	hero->armor_inventory = init_armor_inventory();
+
+	hero->equipped_weapon = NULL;
+	hero->equipped_armor= NULL;
 
 	hero->stats->strength = 3;
 	hero->stats->agility = 3;
@@ -108,56 +114,3 @@ void hero_update_stats(hero_t* hero) {
 	if(hero->health == prev_max_health) hero->health = hero->max_health;
 	if(hero->mana == prev_max_mana) hero->mana= hero->max_mana;
 }
-
-/*void hero_update_equiped_items(*/
-void equip_weapon(hero_t* hero, weapon_item_t* weapon) {
-    if(!weapon->is_equiped) {
-        /*hero->equiped_weapon->is_equiped = 0;*/
-        weapon->is_equiped = 1;
-        hero->attack += weapon->attack;
-    
-        /*add_to_equiped inventory*/
-    }   
-}
-
-void equip_armor(hero_t* hero, armor_item_t* armor) {
-    if(!armor->is_equiped) {
-        /*hero->equiped_armor->is_equiped = 0;*/
-        armor->is_equiped = 1;
-        hero->defense += armor->defense;
-    }   
-}
-
-void use_health_poition(hero_t* hero, health_poition_t* poition) {
-    if(((health_t)hero->health + (health_t)poition->capacity >= (health_t)hero->max_health) && (hero->health != hero->max_health)) {
-        hero->health = hero->max_health;
-        /*delete poition from inventory*/
-        /*destroy poition*/
-    }
-/*    if(hero->health == hero->max_health)*/
-        /*warning! u tebya max hp, chto tyi tvorish???*/
-        /*already_max_hp_warning();*/
-    /*else {*/
-        /*hero->health += poition->capacity;*/
-        /*delete poition from inventory*/
-        /*destroy poition*/
-    /*}*/
-}
-
-void use_mana_poition(hero_t* hero, mana_poition_t* poition) {
-    if(((mana_t)hero->mana+ (mana_t)poition->capacity >= (mana_t)hero->max_mana) && (hero->mana!= hero->max_mana)) {
-        hero->mana= hero->max_mana;
-        /*delete poition from inventory*/
-        /*destroy poition*/
-    }
-    /*if(hero->mana == hero->max_mana)*/
-        /*warning! u tebya max hp, chto tyi tvorish???*/
-        /*already_max_mp_warning();*/
-    /*else {*/
-        /*hero->mana += poition->capacity;*/
-        /*delete poition from inventory*/
-        /*destroy poition*/
-    /*}*/
-}
-
-

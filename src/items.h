@@ -7,8 +7,11 @@ typedef struct {
 	char* name;
 	attack_t attack;
 	gold_t price;
+	size_t picture_length;
 	char** picture;
-	int is_equiped;
+	size_t description_length;
+	char** description;
+	int is_equipped;
 } weapon_item_t;
 
 typedef struct {
@@ -16,8 +19,11 @@ typedef struct {
 	defense_t defense;
 	evasion_t evasion;
 	gold_t price;
+	size_t picture_length;
 	char** picture;
-	int is_equiped;
+	size_t description_length;
+	char** description;
+	int is_equipped;
 } armor_item_t;
 
 typedef struct {
@@ -35,5 +41,6 @@ typedef struct {
 } mana_poition_t;
 
 weapon_item_t* parse_weapon(char* weapon_name);
+armor_item_t* parse_armor(char* armor_name);
 
 #endif

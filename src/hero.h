@@ -32,6 +32,9 @@ typedef struct {
 
 	weapon_inventory_t* weapon_inventory;
 	armor_inventory_t* armor_inventory;
+
+	weapon_item_t* equipped_weapon;
+	armor_item_t* equipped_armor;
 	
 	stats_t* stats;
 

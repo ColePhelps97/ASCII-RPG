@@ -58,11 +58,15 @@ weapon_inventory_t* init_weapon_inventory(void) {
 	return inventory;
 }
 
+void add_armor_to_inventory(armor_inventory_t* inventory, armor_item_t* item); 
+
 armor_inventory_t* init_armor_inventory(void) {
 	armor_inventory_t* inventory = (armor_inventory_t*)malloc(sizeof(weapon_inventory_t));
 	inventory->capacity = 20;
 	inventory->used_slots = 0;
 	inventory->start_item = NULL;
+	
+	add_armor_to_inventory(inventory, parse_armor("wooden_armor"));
 
 	return inventory;
 }

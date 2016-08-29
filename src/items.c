@@ -13,7 +13,7 @@ typedef struct {
     char** picture;
 	size_t description_length;
 	char** description;
-    int is_equiped;
+    int is_equipped;
 } weapon_item_t;
 
 typedef struct {
@@ -25,7 +25,7 @@ typedef struct {
     char** picture;
 	size_t description_length;
 	char** description;
-    int is_equiped;
+    int is_equipped;
 } armor_item_t;
 
 typedef struct {
