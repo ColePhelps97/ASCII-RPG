@@ -13,6 +13,10 @@
 #include "fight.h"
 #include "character_panel.h"
 #include "inventory_panel.h"
+#include "pause_menu.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+
 
 typedef struct {
 	char** welcome_message;
@@ -112,9 +116,9 @@ void destroy_level(level_t* level) {
 
 
 void update_variants(level_t* level) {
-        size_t iter;
-        for(iter = 0; iter < level->number_of_variants; iter++)
-               mvwprintw(stdscr,38, getmaxx(stdscr)/level->number_of_variants * iter + 10, "%lu.%s", iter + 1, level->variants_to_do[iter]);
+	size_t iter;
+	for(iter = 0; iter < level->number_of_variants; iter++)
+		mvwprintw(stdscr,38, getmaxx(stdscr)/level->number_of_variants * iter + 10, "%lu.%s", iter + 1, level->variants_to_do[iter]);
 }
 
 
@@ -143,95 +147,254 @@ int load_level(char* level_name, hero_t* hero) {
         prepare_screen_for_level(level);
 
         while(!is_next_level) {
-                key = getch();
-                switch(key) {
-                	case '1':
-							if(level->number_of_variants >= 1) {
-								clear_game_screen();
+			key = getch();
+			switch(key) {
+			case '1':
+					if(level->number_of_variants >= 1) {
+						clear_game_screen();
 
-								if(is_sub_string(level->variants_text[0][1], "show_text") == 1) {
-										for(iter = 0; iter < strtoul(level->variants_text[0][0], &end, 10) - 1; iter++){
-												mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[0][iter+2]);
-										}
+						if(is_sub_string(level->variants_text[0][1], "show_text") == 1) {
+								for(iter = 0; iter < strtoul(level->variants_text[0][0], &end, 10) - 1; iter++){
+										mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[0][iter+2]);
 								}
+						}
 
-								if(is_sub_string(level->variants_text[0][1], "next_level")) {
-										is_next_level = 1;
-										destroy_level(level);
+						if(is_sub_string(level->variants_text[0][1], "next_level")) {
+								is_next_level = 1;
+								destroy_level(level);
+						}
+
+						if(is_sub_string(level->variants_text[0][1], "fight")) {
+								game_over = !fight(hero, (enemy_t*)level->enemy);
+								is_next_level = 1;
+						}
+					}
+
+					break;
+
+			case '2':
+					if(level->number_of_variants >= 2) {
+
+						if(is_sub_string(level->variants_text[1][1], "show_text")) {
+								for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
+										mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
 								}
+						}
 
-								if(is_sub_string(level->variants_text[0][1], "fight")) {
-										game_over = !fight(hero, (enemy_t*)level->enemy);
-										is_next_level = 1;
+						if(is_sub_string(level->variants_text[1][1], "fight")) {
+								game_over = !fight(hero, (enemy_t*)level->enemy);
+								is_next_level = 1;
+						}
+
+
+						if(is_sub_string(level->variants_text[1][1], "next_level")) {
+								is_next_level = 1;
+								destroy_level(level);
+						}
+
+					}
+
+					break;
+
+
+			case '3':
+					if(level->number_of_variants >= 3) {
+
+						if(is_sub_string(level->variants_text[2][1], "show_text")) {
+								for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
+										mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
 								}
-							}
+						}
 
-							break;
-
-					case '2':
-							if(level->number_of_variants >= 2) {
-
-								if(is_sub_string(level->variants_text[1][1], "show_text")) {
-										for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
-												mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
-										}
-								}
-
-								if(is_sub_string(level->variants_text[1][1], "fight")) {
-										game_over = !fight(hero, (enemy_t*)level->enemy);
-										is_next_level = 1;
-								}
+						if(is_sub_string(level->variants_text[2][1], "fight")) {
+								game_over = !fight(hero, (enemy_t*)level->enemy);
+								is_next_level = 1;
+						}
 
 
-								if(is_sub_string(level->variants_text[1][1], "next_level")) {
-										is_next_level = 1;
-										destroy_level(level);
-								}
+						if(is_sub_string(level->variants_text[2][1], "next_level")) {
+								is_next_level = 1;
+								destroy_level(level);
+						}
 
-							}
+					}
 
-							break;
+					break;
 
-
-					case '3':
-							if(level->number_of_variants >= 3) {
-
-								if(is_sub_string(level->variants_text[2][1], "show_text")) {
-										for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
-												mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
-										}
-								}
-
-								if(is_sub_string(level->variants_text[2][1], "fight")) {
-										game_over = !fight(hero, (enemy_t*)level->enemy);
-										is_next_level = 1;
-								}
-
-
-								if(is_sub_string(level->variants_text[2][1], "next_level")) {
-										is_next_level = 1;
-										destroy_level(level);
-								}
+			case 'q':
+					is_next_level = 1;
+					break;
 		
-							}
-
-							break;
-
-					case 'q':
-							is_next_level = 1;
-							break;
-			
 			case 'c':
-				character_panel(hero);
-				break;
+					character_panel(hero);
+					break;
 			
 			case 'i':
-				inventory_panel(hero, hero->weapon_inventory);
-				break;
-			
+					inventory_panel(hero, hero->weapon_inventory);
+					break;
+			case 27:
+					is_next_level = pause_menu();
+					game_over = is_next_level;
+					break;
 			default: 
+					break;
+            }
+        }
+		
+        clear();
+		if(!game_over) return 1;
+		else return 0;
+}
+
+/* Roles */
+/* 0 - singleplayer */
+/* 1 - multiplayer host */
+/* 2 - multiplayer client */
+
+int load_mult_level(char* level_name, hero_t* hero, int role, int sock) {
+        size_t iter;
+        char key;
+        char* end;
+        int is_next_level = 0;
+		int game_over = 0;
+		char buf[256];
+		char *msg = "ok";
+        level_t* level;
+        level = parse_level(level_name);
+        prepare_screen_for_level(level);
+
+        while(!is_next_level) {
+			key = getch();
+			switch(key) {
+			case '1':
+				if(level->number_of_variants >= 1) {
+					clear_game_screen();
+
+					if(is_sub_string(level->variants_text[0][1], "show_text") == 1) {
+							for(iter = 0; iter < strtoul(level->variants_text[0][0], &end, 10) - 1; iter++){
+									mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[0][iter+2]);
+							}
+					}
+
+					if(is_sub_string(level->variants_text[0][1], "next_level")) {
+							switch(role) {
+								case 1:
+										while(recv(sock, &buf, 256, 0) < 0);
+										while(send(sock, msg, strlen(msg), 0) < 0); 
+										break;
+								case 0:
+										break;
+								case 2:
+										while(send(sock, msg, strlen(msg), 0) < 0); 
+										while(recv(sock, &buf, 256, 0) < 0);
+										break;
+							}
+													
+							is_next_level = 1;
+							destroy_level(level);
+					}
+
+					if(is_sub_string(level->variants_text[0][1], "fight")) {
+							game_over = !fight(hero, (enemy_t*)level->enemy);
+							is_next_level = 1;
+					}
+				}
+
 				break;
-                }
+
+			case '2':
+					if(level->number_of_variants >= 2) {
+
+						if(is_sub_string(level->variants_text[1][1], "show_text")) {
+								for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
+										mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
+								}
+						}
+
+						if(is_sub_string(level->variants_text[1][1], "fight")) {
+								game_over = !fight(hero, (enemy_t*)level->enemy);
+								is_next_level = 1;
+						}
+
+
+						if(is_sub_string(level->variants_text[1][1], "next_level")) {
+							switch(role) {
+								case 1:
+										while(recv(sock, &buf, 256, 0) < 0);
+										while(send(sock, msg, strlen(msg), 0) < 0); 
+										break;
+								case 0:
+										break;
+								case 2:
+										while(send(sock, msg, strlen(msg), 0) < 0); 
+										while(recv(sock, &buf, 256, 0) < 0);
+										break;
+							}
+								
+								is_next_level = 1;
+								destroy_level(level);
+						}
+
+					}
+
+					break;
+
+
+			case '3':
+					if(level->number_of_variants >= 3) {
+
+						if(is_sub_string(level->variants_text[2][1], "show_text")) {
+								for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
+										mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
+								}
+						}
+
+						if(is_sub_string(level->variants_text[2][1], "fight")) {
+								game_over = !fight(hero, (enemy_t*)level->enemy);
+								is_next_level = 1;
+						}
+
+
+						if(is_sub_string(level->variants_text[2][1], "next_level")) {
+							switch(role) {
+								case 1:
+										while(recv(sock, &buf, 256, 0) < 0);
+										while(send(sock, msg, strlen(msg), 0) < 0); 
+										break;
+								case 0:
+										break;
+								case 2:
+										while(send(sock, msg, strlen(msg), 0) < 0); 
+										while(recv(sock, &buf, 256, 0) < 0);
+										break;
+							}
+								
+								is_next_level = 1;
+								destroy_level(level);
+						}
+
+					}
+
+					break;
+
+			case 'q':
+					is_next_level = 1;
+					break;
+		
+			case 'c':
+					character_panel(hero);
+					break;
+			
+			case 'i':
+					inventory_panel(hero, hero->weapon_inventory);
+					break;
+			case 27:
+					is_next_level = pause_menu();
+					game_over = is_next_level;
+					break;
+			default: 
+					break;
+            }
         }
 		
         clear();

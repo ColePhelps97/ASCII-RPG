@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <unistd.h>
+#include <time.h>
 #include "mystring.h"
 #include "hero.h"
 #include "constants.h"
@@ -69,27 +70,47 @@ void prepare_screen_for_fight(hero_t* hero, enemy_t* enemy) {
 
 /* If enemy not defeated player method returns int by value 1 */
 int enemy_base_attack(enemy_t* enemy, hero_t* hero) {
-	if((int)hero->health - (int)enemy->attack >= 0) {
-		hero->health -= enemy->attack;
-		return 1;
-	}
+	float damage;
+	srand(clock());
+	if(!(rand() % 100 < hero->evasion * 100)) {
+		if(hero->defense >= enemy->attack)
+			damage = 1 / (1 + (hero->defense - enemy->attack) * 0.02);
+		else damage = 1 + (enemy->attack - hero->defense) * 0.02;
+		damage *= enemy->attack;
+		if((int)hero->health - (int)damage >= 0) {
+			hero->health -= (int)damage;
+			return 1;
+		}
 
-	else {
-		hero->health = 0; 
-		return 0;
+		else {
+			hero->health = 0; 
+			return 0;
+		}
 	}
+	return 1;
 }
 
 /* If player not defeated enemy method returns int by value 1 */
 int hero_base_attack(hero_t* hero, enemy_t* enemy) {
-	if((int)enemy->health - (int)hero->attack >= 0) {
-		enemy->health -= hero->attack;
-		return 1;
+	float damage;
+	srand(clock());
+	if(!(rand() % 100 < enemy->evasion * 100)) {
+		if(enemy->defense >= hero->attack)
+			damage = 1 / (1 + (enemy->defense - hero->attack) * 0.02);
+		else damage = 1 + (hero->attack - enemy->defense) * 0.02;
+		damage *= hero->attack;
+		if((int)enemy->health - (int)damage >= 0) {
+			enemy->health -= (int)damage;
+			return 1;
+		}
+
+		else {
+			enemy->health = 0; 
+			return 0;
+		}
 	}
-	else { 
-		enemy->health = 0;
-		return 0;
-	}
+	return 1;
+
 }
 
 /* If player not defeated enemy method returns int by value 1 */

@@ -47,7 +47,6 @@ void hero_update_stats(hero_t* hero);
 	
 hero_t* init_hero(){
 	hero_t* hero;
-
 	hero = (hero_t*)malloc(sizeof(hero_t));
 	hero->stats = (stats_t*) malloc(sizeof(stats_t));
 
@@ -69,8 +68,10 @@ hero_t* init_hero(){
 	
 	hero->evasion = 0;
 
+
 	hero->weapon_inventory = init_weapon_inventory();
 	hero->armor_inventory = init_armor_inventory();
+
 
 	hero->equipped_weapon = NULL;
 	hero->equipped_armor= NULL;
@@ -100,9 +101,11 @@ void hero_up(hero_t* hero) {
 }
 
 void hero_update_stats(hero_t* hero) {
-	const attack_t base_attack_value = 3;
+	const attack_t base_attack_value = 1;
 	const health_t base_health_value = 70;
 	const mana_t base_mana_value = 70;
+	const defense_t base_defense = 1;
+	const evasion_t base_evasion = 0;
 	
 	health_t prev_max_health = hero->max_health;
 	mana_t prev_max_mana= hero->max_mana;
@@ -110,6 +113,13 @@ void hero_update_stats(hero_t* hero) {
 	hero->max_health = base_health_value + 10 * hero->stats->strength;
 	hero->attack = base_attack_value + hero->stats->strength;
 	hero->max_mana = base_mana_value + 10 * hero->stats->intellect;
+	hero->evasion = base_evasion + 0.003 * hero->stats->agility;
+	hero->defense = base_defense + hero->stats->agility * 0.2;
+	if(hero->equipped_weapon) hero->attack += hero->equipped_weapon->attack;
+	if(hero->equipped_armor) {
+		 hero->defense += hero->equipped_armor->defense;
+		 hero->evasion += hero->equipped_armor->evasion;
+	}
 
 	if(hero->health == prev_max_health) hero->health = hero->max_health;
 	if(hero->mana == prev_max_mana) hero->mana= hero->max_mana;

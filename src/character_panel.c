@@ -94,7 +94,7 @@ void paint_character_window(WINDOW* window, PANEL* panel, hero_t* hero) {
 	mvwprintw(window, 5, 3, "%s                    %lu/%lu", MANA, hero->mana, hero->max_mana);
 	mvwprintw(window, 6, 3, "%s                        %lu", ATTACK, hero->attack);
 	mvwprintw(window, 7, 3, "%s                       %lu", DEFENSE, hero->defense);
-	mvwprintw(window, 8, 3, "%s                       %d", EVASION, hero->evasion);
+	mvwprintw(window, 8, 3, "%s                   %.3f", EVASION, hero->evasion);
 	mvwprintw(window, 9, 3, "%s               %lu/%lu", EXPERIENCE, hero->exp, 100);
 	mvwprintw(window, 12, 3, "%s        %s%lu", STATS,UNSPENT_POINTS, hero->stats->unspent_points);
 	mvwprintw(window, 14, 3, "%s               %lu", STRENGTH, hero->stats->strength);

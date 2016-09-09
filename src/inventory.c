@@ -89,7 +89,9 @@ armor_inventory_item_t* get_last_armor(armor_inventory_t* inventory) {
 
 void add_weapon_to_inventory(weapon_inventory_t* inventory, weapon_item_t* item) {
 	weapon_inventory_item_t* last, *adding_item;
+	puts("add_weapon");
 	adding_item = (weapon_inventory_item_t*)malloc(sizeof(weapon_inventory_item_t));
+	puts("add_weapon2");
 	if((int)inventory->capacity - (int)inventory->used_slots > 0) {
 		/* Empty iventory */
 		if(inventory->start_item != NULL) {
@@ -115,6 +117,20 @@ void add_weapon_to_inventory(weapon_inventory_t* inventory, weapon_item_t* item)
 	}
 	
 }
+
+void free_weapon_inventory(weapon_inventory_t* weapon_inventory) {
+	weapon_inventory_item_t* item2;
+	weapon_inventory_item_t* item = weapon_inventory->start_item;
+	while(item->next) {
+		item->next->prev = NULL;
+		item2 = item;
+		item = item->next;
+		free(item2->weapon);
+		free(item2);
+	}
+	free(item);
+	free(weapon_inventory);
+}	
 void add_armor_to_inventory(armor_inventory_t* inventory, armor_item_t* item) {
 	armor_inventory_item_t* last, *adding_item;
 	adding_item = (armor_inventory_item_t*)malloc(sizeof(weapon_inventory_item_t));

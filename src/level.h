@@ -18,6 +18,7 @@ typedef struct {
 level_t* parse_level(char* level_name);
 void destroy_level(level_t* level);
 int load_level(char* level_name, hero_t* hero);
+int load_mult_level(char* level_name, hero_t* hero, int role, int sock);
 void update_variants(level_t level);
 void prepare_screen_for_level(level_t level);
 

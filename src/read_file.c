@@ -36,7 +36,8 @@ size_t count_frows(FILE *file) {
 char** read_file(FILE *file) {
 	size_t number_of_rows, iter;
 	char** string_array;
-	fseek(file, 0, SEEK_SET);
+	fseek(file, 0, SEEK_SET); /*segfault here*/
+	puts("read ok");
 	number_of_rows = count_frows(file);
 	string_array = malloc(sizeof(char*)*number_of_rows);
 	for(iter = 0; iter < number_of_rows; iter++) {

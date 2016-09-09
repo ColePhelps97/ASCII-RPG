@@ -35,6 +35,7 @@ weapon_inventory_t* init_weapon_inventory(void);
 weapon_inventory_item_t* get_last_weapon(weapon_inventory_t* inventory);
 void add_weapon_to_inventory(weapon_inventory_t* inventory, weapon_item_t* item);
 void delete_weapon_from_inventory(weapon_inventory_t* inventory, weapon_inventory_item_t* item);
+void free_weapon_inventory(weapon_inventory_t* weapon_inventory);
 
 armor_inventory_t* init_armor_inventory(void);
 armor_inventory_item_t* get_last_armor(armor_inventory_t* inventory);

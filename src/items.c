@@ -90,6 +90,8 @@ weapon_item_t* parse_weapon(char* weapon_name) {
 		weapon->description[iter] = text[cur_parsing_row];
 		cur_parsing_row++;
 	}
+	free(text);
+	fclose(file);
 	return weapon;
 }
 
@@ -144,5 +146,7 @@ armor_item_t* parse_armor(char* armor_name) {
 		armor->description[iter] = text[cur_parsing_row];
 		cur_parsing_row++;
 	}
+	fclose(file);
+	free(text);
 	return armor;
 }

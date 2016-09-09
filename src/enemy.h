@@ -11,6 +11,8 @@ typedef struct {
     size_t picture_length;
     health_t max_health;
     health_t health;
+	evasion_t evasion;
+	defense_t defense;
     experience_t exp;
     attack_t attack;
 } enemy_t;
