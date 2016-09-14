@@ -46,6 +46,7 @@ const char* GOLD = "Gold:";
 const char* DEFENSE = "Defense:";
 const char* EVASION = "Evasion:";
 
+
 const int TOP_MENU_LENGTH = 79;
 const char* TOP_MENU_PANEL_UP =      "|              |           |                 |                 |              |";
 const char* TOP_MENU_PANEL_CENTER =  "|  Menu (Esc)  |  Map (M)  |  Inventory (I)  |  Character (C)  |  Skills (K)  |";

@@ -279,14 +279,14 @@ int load_mult_level(char* level_name, hero_t* hero, int role, int sock) {
 					if(is_sub_string(level->variants_text[0][1], "next_level")) {
 							switch(role) {
 								case 1:
-										while(recv(sock, &buf, 256, 0) < 0);
-										while(send(sock, msg, strlen(msg), 0) < 0); 
+										recv(sock, &buf, 256, 0);
+										send(sock, msg, strlen(msg), 0);
 										break;
 								case 0:
 										break;
 								case 2:
-										while(send(sock, msg, strlen(msg), 0) < 0); 
-										while(recv(sock, &buf, 256, 0) < 0);
+										send(sock, msg, strlen(msg), 0);
+										recv(sock, &buf, 256, 0);
 										break;
 							}
 													
@@ -320,14 +320,18 @@ int load_mult_level(char* level_name, hero_t* hero, int role, int sock) {
 						if(is_sub_string(level->variants_text[1][1], "next_level")) {
 							switch(role) {
 								case 1:
-										while(recv(sock, &buf, 256, 0) < 0);
-										while(send(sock, msg, strlen(msg), 0) < 0); 
+										/*while(recv(sock, &buf, 256, 0) < 0);*/
+										/*while(send(sock, msg, strlen(msg), 0) < 0); */
+										recv(sock, &buf, 256, 0);
+										send(sock, msg, strlen(msg), 0);
 										break;
 								case 0:
 										break;
 								case 2:
-										while(send(sock, msg, strlen(msg), 0) < 0); 
-										while(recv(sock, &buf, 256, 0) < 0);
+										/*while(send(sock, msg, strlen(msg), 0) < 0); */
+										/*while(recv(sock, &buf, 256, 0) < 0);*/
+										send(sock, msg, strlen(msg), 0);
+										recv(sock, &buf, 256, 0);
 										break;
 							}
 								

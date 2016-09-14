@@ -1,86 +1,99 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <ncurses.h>
 #include <panel.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <string.h>
+#include <pthread.h>
 #include "start_game.h"
+#include "server.h"
+#include "mystring.h"
 
-int host_game() {
+int host_game(void) {
 	WINDOW* window;
 	PANEL* panel;
-	int listener, client;
+	int sock;
 	struct sockaddr_in addr;
 	int yes = 1;
 	char buf[256];
-	int len, bytes_sent, bytes_recv;
-	char *messg = "Hello!";
+	char* string_buf;
+	int bytes_recv;
+	char *ready= "ready";
+	char *start= "start";
+	char key;
 
-	window = newwin(10, 40, 30, 40);
+	pthread_t server;
+
+	if(pthread_create(&server, NULL, start_server, NULL));
+
+	window = newwin(10, 40, 10, 60);
 	box(window, 0, 0);
 	panel = new_panel(window);
 	top_panel(panel);
+
+	
+
+	mvwprintw(window, 4, 5, "%s", "Waiting for connections");
+
 	update_panels();
 	doupdate();
 	
-	if((listener = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
-		perror("listener socket");
+	if((sock = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
+		perror("socket");
 		return 1;
 	}
 
-	if((setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int))) == -1) {
+	if((setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int))) == -1) {
 		perror("setsockopt");
-		return 1;
+		return 2;
 	}
 
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(6666);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	memset(addr.sin_zero, 0, sizeof addr.sin_zero);
-
-	if(bind(listener, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-		perror("bind:");
-		return 1;
-	}
 	
-	if(listen(listener, 1) == -1) {
-		perror("listen");
-		return 1;
-	}
-	
-	/*if((client = accept(listener, (struct sockaddr *)&client_addr, &client_addr_size)) == -1 ) {*/
-	if((client = accept(listener, NULL, NULL)) == -1 ) {
-		perror("accept");	
-		return 1;
-	}
-	
-	len = strlen(messg);
-	bytes_sent = send(client, messg, len, 0);
-	printf("%d", len - bytes_sent);
-
-	if((bytes_recv = recv(client, &buf, 256, 0)) != -1) {
-		buf[bytes_recv] = '\0';
-		mvwprintw(window, 1, 1, "%s", buf);
-		update_panels();
-		doupdate();
-	} else {
-		perror("recv");
-		return 1;
+	if(connect(sock, (struct sockaddr*)&addr, sizeof(struct sockaddr)) == -1) {
+		perror("connect");
+		return 3;
 	}
 
-	start_mult_game(1, client);
-	close(client);
-	close(listener);
+	key = getch();
+	if(key == 'c') {
+		/* stop server */
+		 return 0;
+	} else 
+		if(key == '\n')
+			send(sock, ready, strlen(ready), 0);
+
+	while(1) {
+		if((bytes_recv = recv(sock, &buf, 256, 0)) != -1) {
+			buf[bytes_recv] = '\0';
+			mvwprintw(window, 1, 1, "%s", buf);
+			string_buf = buf;
+
+			if(is_equals(string_buf, start)) break;
+
+			update_panels();
+			doupdate();
+		} else {
+			perror("recv");
+			return 1;
+		}
+	}
+
+	start_game();
+	close(sock);
 	del_panel(panel);
 	delwin(window);
 	return 0;
 }
 
-int connect_to_game(WINDOW* window);
+int connect_to_game();
 
 
 int mp_menu() {
@@ -126,11 +139,11 @@ int mp_menu() {
 						break;
 					}
 					if(menu_position == 1) {
-						exit = connect_to_game(window);
+						exit = connect_to_game();
 						break;
 					}
 					if(menu_position == 0) {
-						exit = host_game(window);
+						exit = host_game();
 						break;
 					}
 		}
@@ -140,14 +153,35 @@ int mp_menu() {
 	return !exit;
 }
 	
-int connect_to_game(WINDOW* window) {
+int connect_to_game(void) {
+	WINDOW* window;
+	PANEL* panel;
 	char buf[256];
+	int yes = 1;
 	struct sockaddr_in sockaddr;
-	int sock, bytes_recv, bytes_sent;
-	char* msg = "hellO";
+	int sock, bytes_recv;
+	char* ready = "ready";
+	char* start = "start";
+	char key;
+	char* string_buf;
+	
+	window = newwin(10, 40, 10, 60);
+	box(window, 0, 0);
+	panel = new_panel(window);
+	top_panel(panel);
+
+	mvwprintw(window, 4, 5, "%s", "Waiting other players");
+
+	update_panels();
+	doupdate();
 
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		perror("client socket");
+		return 1;
+	}
+
+	if((setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int))) == -1) {
+		perror("setsockopt");
 		return 1;
 	}
 
@@ -161,20 +195,30 @@ int connect_to_game(WINDOW* window) {
 		return 1;
 	}
 
-	if((bytes_recv = recv(sock, &buf, 256, 0)) != -1) {
-		buf[bytes_recv] = '\0';
-		printf("%s", buf);
-	} else {
-		perror("recv");
-		return 1;
+	key = getch();
+	if(key == 'c') {
+		 return 0;
+	} else 
+		if(key == '\n')
+			send(sock, ready, strlen(ready), 0);
+
+	while(1) {
+		if((bytes_recv = recv(sock, &buf, 256, 0)) != -1) {
+			buf[bytes_recv] = '\0';
+			mvwprintw(window, 1, 1, "%s", buf);
+			string_buf = buf;
+
+			if(is_equals(string_buf, start)) break;
+
+			update_panels();
+			doupdate();
+		} else {
+			perror("recv");
+			return 1;
+		}
 	}
 
-	if((bytes_sent = send(sock, msg, strlen(msg), 0)) == -1) {
-		perror("send");
-		return 1;
-	}
-
-	start_mult_game(2, sock);
-
+	start_game();
+	close(sock);
 	return 0;
 }
