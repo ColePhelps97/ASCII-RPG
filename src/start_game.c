@@ -26,13 +26,13 @@ int start_game(){
 	return 0;	
 }
 
-int start_mult_game(int role, int sock) {
+int start_mult_game(int sock) {
 	hero_t* hero;
 	hero = init_hero();
-	if(!load_mult_level("level1", hero, role, sock)) return 0;
-	if(!load_mult_level("level2", hero, role, sock)) return 0;
-	if(!load_mult_level("level3", hero, role, sock)) return 0;
-	if(!load_mult_level("level4", hero, role, sock)) return 0;
+	if(!load_mult_level("level1", hero, sock)) return 0;
+	if(!load_mult_level("level2", hero, sock)) return 0;
+	if(!load_mult_level("level3", hero, sock)) return 0;
+	if(!load_mult_level("level4", hero, sock)) return 0;
 	free(hero->stats);
 	free_weapon_inventory(hero->weapon_inventory);
 	free(hero->armor_inventory);

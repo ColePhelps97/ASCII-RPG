@@ -24,6 +24,7 @@ int host_game(void) {
 	int bytes_recv;
 	char *ready= "ready";
 	char *start= "start";
+	char* cancel = "cancel";
 	char key;
 
 	pthread_t server;
@@ -64,8 +65,13 @@ int host_game(void) {
 
 	key = getch();
 	if(key == 'c') {
-		/* stop server */
-		 return 0;
+		if(send(sock, cancel, strlen(cancel), 0) < 0) puts("OSHIBKAA");
+		else puts("client send cancel");
+		pthread_cancel(server);	
+		close(sock);
+		/*del_panel(panel);*/
+		/*delwin(window);*/
+		return 0;
 	} else 
 		if(key == '\n')
 			send(sock, ready, strlen(ready), 0);
@@ -86,11 +92,11 @@ int host_game(void) {
 		}
 	}
 
-	start_game();
+	start_mult_game(sock);
 	close(sock);
 	del_panel(panel);
 	delwin(window);
-	return 0;
+	return 13;
 }
 
 int connect_to_game();
@@ -125,6 +131,7 @@ int mp_menu() {
 		key = getch();
 
 		mvwprintw(window, maxx/2 - 1 + menu_position, maxy/2 - 8, "%s", " ");
+		clear();
 
 		switch(key) {
 			case 'j':
@@ -144,6 +151,7 @@ int mp_menu() {
 					}
 					if(menu_position == 0) {
 						exit = host_game();
+						puts("host game exit");
 						break;
 					}
 		}
@@ -162,6 +170,7 @@ int connect_to_game(void) {
 	int sock, bytes_recv;
 	char* ready = "ready";
 	char* start = "start";
+	char* stop = "stop";
 	char key;
 	char* string_buf;
 	
@@ -197,11 +206,17 @@ int connect_to_game(void) {
 
 	key = getch();
 	if(key == 'c') {
-		 return 0;
+		del_panel(panel);
+		delwin(window);
+		close(sock);
+		return 0;
 	} else 
 		if(key == '\n')
-			send(sock, ready, strlen(ready), 0);
-
+			puts("ready");
+			if(send(sock, ready, strlen(ready), 0) < 0) {
+				perror("send");
+				return 1;
+			}
 	while(1) {
 		if((bytes_recv = recv(sock, &buf, 256, 0)) != -1) {
 			buf[bytes_recv] = '\0';
@@ -209,7 +224,12 @@ int connect_to_game(void) {
 			string_buf = buf;
 
 			if(is_equals(string_buf, start)) break;
-
+			if(is_equals(string_buf, stop)) {
+				del_panel(panel);
+				delwin(window);
+				close(sock);
+				return 0;
+			}
 			update_panels();
 			doupdate();
 		} else {
@@ -218,7 +238,9 @@ int connect_to_game(void) {
 		}
 	}
 
-	start_game();
+	start_mult_game(sock);
+	del_panel(panel);
+	delwin(window);
 	close(sock);
 	return 0;
 }
