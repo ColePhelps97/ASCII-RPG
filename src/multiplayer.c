@@ -65,8 +65,7 @@ int host_game(void) {
 
 	key = getch();
 	if(key == 'c') {
-		if(send(sock, cancel, strlen(cancel), 0) < 0) puts("OSHIBKAA");
-		else puts("client send cancel");
+		if(send(sock, cancel, strlen(cancel), 0) < 0) perror("send");
 		pthread_cancel(server);	
 		close(sock);
 		/*del_panel(panel);*/
@@ -151,7 +150,6 @@ int mp_menu() {
 					}
 					if(menu_position == 0) {
 						exit = host_game();
-						puts("host game exit");
 						break;
 					}
 		}
@@ -212,7 +210,6 @@ int connect_to_game(void) {
 		return 0;
 	} else 
 		if(key == '\n')
-			puts("ready");
 			if(send(sock, ready, strlen(ready), 0) < 0) {
 				perror("send");
 				return 1;

@@ -12,6 +12,8 @@
 
 int sync_level(int clients[], size_t plr_cnt); 
 
+int sync_fight(int clients[], size_t plr_cnt); 
+
 void* start_server(void *arg) {
 	int listener;
 	int clients[4];
@@ -93,7 +95,6 @@ void* start_server(void *arg) {
 						return NULL;
 					}
 					else {
-						puts("one new client");
 						FD_SET(clients[plr_cnt], &master);
 						if(clients[plr_cnt] > max_fd) max_fd = clients[plr_cnt];
 					}
@@ -116,7 +117,6 @@ void* start_server(void *arg) {
 					} 
 					/*RECV MESSAGE*/
 					else {
-						puts("server recv message");
 						buf[bytes_recv] = '\0';
 						string = buf;
 						if(is_equals(string, READY_MSG)) {
@@ -127,22 +127,17 @@ void* start_server(void *arg) {
 						printf("%s", string);
 						if(is_equals(string, CANCEL_MSG)) {
 							end = 1;
-							puts("end");
 							for(j = 0; j < plr_cnt; j++) {
-								puts("send stop to clients");
 								if(clients[j] != i) {
 									if((send(clients[j], STOPPED_MSG, strlen(STOPPED_MSG), 0)) < 0) {
 										perror("SEND STOP ERROR");
 									}
-									puts("send close");
 									FD_CLR(j, &master);
 									/*close(j);*/
-									puts("send close");
 								}
 							}
 							FD_CLR(i, &master);
 							close(i);
-							puts("i closed");
 						}
 					}
 				}
@@ -152,10 +147,7 @@ void* start_server(void *arg) {
 			if(end) {
 				if((closestatus = close(listener)) != 0) {
 					perror("CANT CLOSE");
-					puts("Can't close SOCKET");
 				}
-				else puts("listening socket closed");
-				/*server_running = 0;*/
 				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 				pthread_testcancel();
 				return NULL;
@@ -184,7 +176,7 @@ void* start_server(void *arg) {
 }
 		
 int sync_level(int clients[], size_t plr_cnt) {
-	int next_level = 0;
+	int next_level = 0, next_fight = 0;
 	int ready[4] = {0};
 	int ready_fight[4] = {0};
 	int max_fd = 0;
@@ -193,7 +185,7 @@ int sync_level(int clients[], size_t plr_cnt) {
 	char* string;
 	char* READY_MSG = "ready";
 	char* NEXT_MSG = "next";
-	char* FIGHT = "figth";
+	char* FIGHT_MSG = "fight";
 	size_t i, j;
 	fd_set master;
 	fd_set read_fds;
@@ -205,18 +197,16 @@ int sync_level(int clients[], size_t plr_cnt) {
 		if(clients[i] > max_fd)
 			max_fd = clients[i];
 		FD_SET(clients[i], &master);
-		puts("synclevel client");
 	}
 	
 
 
-	while(!next_level) {
+	while(1) {
 		read_fds = master;
 		if(select(max_fd + 1, &read_fds, NULL, NULL, NULL) == -1) {
 			perror("select");
 			return 1;
 		}
-		puts("some action");
 		for(i = 0; i <= max_fd; i++) {
 			if(FD_ISSET(i, &read_fds)) {
 				if((recvd_bytes = recv(i, buf, sizeof(buf), 0)) < 0) {
@@ -230,7 +220,11 @@ int sync_level(int clients[], size_t plr_cnt) {
 							if(clients[j] == i) ready[j] = 1;
 						}
 					}
-		
+					if(is_equals(string, FIGHT_MSG)) {
+						for(j = 0; j < plr_cnt; j++) {
+							if(clients[j] == i) ready_fight[j] = 1;
+						}
+					}
 				}
 			}
 		}
@@ -239,12 +233,115 @@ int sync_level(int clients[], size_t plr_cnt) {
 		for(i = 0; i < plr_cnt; i++) {
 			if(!ready[i]) next_level = 0;
 		}
-		
+
+		next_fight = 1;
+		for(i = 0; i < plr_cnt; i++) {
+			if(!ready_fight[i]) next_fight = 0;
+		}
+
+		if(next_level == 1) {
+			for(i = 0; i < plr_cnt; i++) 
+				if(send(clients[i], NEXT_MSG , strlen(NEXT_MSG), 0) == -1) perror("send");
+			break;
+		}
+
+		if(next_fight == 1) {
+			for(i = 0; i < plr_cnt; i++) 
+				if(send(clients[i], FIGHT_MSG , strlen(FIGHT_MSG), 0) == -1) perror("send");
+			sync_fight(clients, plr_cnt);
+			break;
+		}
+
 	}
 
-	for(i = 0; i < plr_cnt; i++) 
-		if(send(clients[i], NEXT_MSG , strlen(NEXT_MSG), 0) == -1) perror("send");
+		
+	/*in fight sync*/
 	
+	return 0;
+}
+
+int sync_fight(int clients[], size_t plr_cnt) {
+	int damage[4] = {0};
+	int next[4] = {0};
+	char* ATTACK_MSG = "attack";
+	char* string;
+	char buf[256];
+	int next_turn = 0;
+	int i, j, recvd_bytes;
+	int total_damage;
+	int max_fd;
+	
+	fd_set master;
+	fd_set read_fds;
+
+	FD_ZERO(&master);
+	FD_ZERO(&read_fds);
+
+	for(i = 0; i< plr_cnt; i++) {
+		if(clients[i] > max_fd)
+			max_fd = clients[i];
+		FD_SET(clients[i], &master);
+	}
+	
+
+
+	while(1) {
+		read_fds = master;
+		if(select(max_fd + 1, &read_fds, NULL, NULL, NULL) == -1) {
+			perror("select");
+			return 1;
+		}
+		for(i = 0; i <= max_fd; i++) {
+			if(FD_ISSET(i, &read_fds)) {
+				if((recvd_bytes = recv(i, buf, sizeof(buf), 0)) < 0) {
+					perror("recv:server");
+					return 1;
+				} else {
+					puts("recvd_message");
+					buf[recvd_bytes] = '\0';
+					string = buf;
+					if(is_equals(string, ATTACK_MSG)) {
+						for(j = 0; j < plr_cnt; j++) {
+							if(clients[j] == i) {
+								next[j] = 1;
+								puts("next ready");
+							}
+						}
+						if((recvd_bytes = recv(i, buf, sizeof(buf), 0)) < 0) {
+							perror("recv damage");
+							return 1;
+						}
+						for(j = 0; j < plr_cnt; j++) {
+							if(clients[j] == i) damage[j] = strtoul(string, NULL, 10);
+						}
+					}
+				}
+			}
+		}
+		next_turn = 1;
+		for(i = 0; i < plr_cnt; i++) {
+			if(!next[i]) {
+				next_turn = 0;
+			}
+		}
+
+		if(next_turn) {
+			puts("next turn");
+			for(i = 0; i < plr_cnt; i++) 
+				total_damage += damage[i];
+			if((sprintf(buf, "%d", total_damage)) > 0)
+				puts("sprint ok");
+			for(i = 0; i < plr_cnt; i++) {
+				puts("send total damage");
+				if(send(clients[i], "10", 2, 0) < 0) {
+					perror("send");
+					return 1;
+				}
+			}
+			break;
+		}
+
+	}
 	return 0;
 }
 	

@@ -247,16 +247,56 @@ int load_level(char* level_name, hero_t* hero) {
 		else return 0;
 }
 
+int level_sync(int sock) {
+	char buf[256], *string;
+	int recvd_bytes;
+	char* READY_MSG = "ready";
+	char* NEXT_MSG = "next";
+
+	if((send(sock, READY_MSG, strlen(READY_MSG), 0)) < 0) {
+		perror("send");
+		return 1;				
+	}
+
+	if((recvd_bytes = recv(sock, buf, sizeof(buf), 0)) < 0) {
+		perror("recv");
+		return 1;
+	}
+
+	puts("i recv");
+	buf[recvd_bytes] = '\0';
+	string = buf;
+	if(is_equals(string, NEXT_MSG)) return 1;
+	else return 0;
+}
+
+int sync_level_fight(int sock) {
+	char buf[256], *string;
+	int recvd_bytes;
+	char* FIGHT_MSG = "fight";
+
+	if((send(sock, FIGHT_MSG, strlen(FIGHT_MSG), 0)) < 0) {
+		perror("send");
+		return 1;				
+	}
+
+	if((recvd_bytes = recv(sock, buf, sizeof(buf), 0)) < 0) {
+		perror("recv");
+		return 1;
+	}
+
+	buf[recvd_bytes] = '\0';
+	string = buf;
+	if(is_equals(string, FIGHT_MSG)) return 1;
+	else return 0;
+}
+
 int load_mult_level(char* level_name, hero_t* hero, int sock) {
         size_t iter;
         char key;
         char* end;
-		char buf[256], *string;
-		int recvd_bytes;
         int is_next_level = 0;
 		int game_over = 0;
-		char* READY_MSG = "ready";
-		char* NEXT_MSG = "next";
         level_t* level;
         level = parse_level(level_name);
         prepare_screen_for_level(level);
@@ -276,108 +316,81 @@ int load_mult_level(char* level_name, hero_t* hero, int sock) {
 
 					if(is_sub_string(level->variants_text[0][1], "next_level")) {
 
-							if((send(sock, READY_MSG, strlen(READY_MSG), 0)) < 0) {
-								perror("send");
-								return 1;				
-							}
-
-							if((recvd_bytes = recv(sock, buf, sizeof(buf), 0)) < 0) {
-								perror("recv");
-								return 1;
-							}
-
-							buf[recvd_bytes] = '\0';
-							string = buf;
-							if(is_equals(string, NEXT_MSG)) {
+							if(level_sync(sock)) {
 								is_next_level = 1;
 								destroy_level(level);
 							} else break;
 					}
 
 					if(is_sub_string(level->variants_text[0][1], "fight")) {
-							game_over = !fight(hero, (enemy_t*)level->enemy);
+						if(sync_level_fight(sock)) {
+							game_over = !mult_fight(hero, (enemy_t*)level->enemy, sock);
 							is_next_level = 1;
+						} else break;
 					}
 				}
 
 				break;
 
 			case '2':
-					if(level->number_of_variants >= 2) {
+				if(level->number_of_variants >= 2) {
 
-						if(is_sub_string(level->variants_text[1][1], "show_text")) {
-								for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
-										mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
-								}
-						}
-
-						if(is_sub_string(level->variants_text[1][1], "fight")) {
-								game_over = !fight(hero, (enemy_t*)level->enemy);
-								is_next_level = 1;
-						}
-
-
-						if(is_sub_string(level->variants_text[1][1], "next_level")) {
-							if((send(sock, READY_MSG, strlen(READY_MSG), 0)) < 0) {
-								perror("send");
-								return 1;				
+					if(is_sub_string(level->variants_text[1][1], "show_text")) {
+							for(iter = 0; iter < strtoul(level->variants_text[1][0], &end, 10) - 1; iter++){
+									mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[1][iter+2]);
 							}
+					}
 
-							if((recvd_bytes = recv(sock, buf, sizeof(buf), 0)) < 0) {
-								perror("recv");
-								return 1;
-							}
+					if(is_sub_string(level->variants_text[1][1], "fight")) {
+						if(sync_level_fight(sock)) {
+							game_over = !mult_fight(hero, (enemy_t*)level->enemy, sock);
+							is_next_level = 1;
+						} else break;
+					}
 
-							buf[recvd_bytes] = '\0';
-							string = buf;
-							if(is_equals(string, NEXT_MSG)) {
-								is_next_level = 1;
-								destroy_level(level);
-							} else break;
-						}
+
+					if(is_sub_string(level->variants_text[1][1], "next_level")) {
+
+						if(level_sync(sock)) {
+							is_next_level = 1;
+							destroy_level(level);
+						} else break;
 
 					}
 
-					break;
+				}
+				break;
 
 
 			case '3':
-					if(level->number_of_variants >= 3) {
+				if(level->number_of_variants >= 3) {
 
-						if(is_sub_string(level->variants_text[2][1], "show_text")) {
-								for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
-										mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
-								}
-						}
-
-						if(is_sub_string(level->variants_text[2][1], "fight")) {
-								game_over = !fight(hero, (enemy_t*)level->enemy);
-								is_next_level = 1;
-						}
-
-
-						if(is_sub_string(level->variants_text[2][1], "next_level")) {
-							if((send(sock, READY_MSG, strlen(READY_MSG), 0)) < 0) {
-								perror("send");
-								return 1;				
+					if(is_sub_string(level->variants_text[2][1], "show_text")) {
+							for(iter = 0; iter < strtoul(level->variants_text[2][0], &end, 10) - 1; iter++){
+									mvwprintw(stdscr, iter + 7, 10, "%s", level->variants_text[2][iter+2]);
 							}
+					}
 
-							if((recvd_bytes = recv(sock, buf, sizeof(buf), 0)) < 0) {
-								perror("recv");
-								return 1;
-							}
+					if(is_sub_string(level->variants_text[2][1], "fight")) {
+						if(sync_level_fight(sock)) {
+							game_over = !mult_fight(hero, (enemy_t*)level->enemy, sock);
+							is_next_level = 1;
+						} else break;
+					}
 
-							buf[recvd_bytes] = '\0';
-							string = buf;
-							if(is_equals(string, NEXT_MSG)) {
-								is_next_level = 1;
-								destroy_level(level);
-							} else break;
-						}
+
+					if(is_sub_string(level->variants_text[2][1], "next_level")) {
+
+						if(level_sync(sock)) {
+							is_next_level = 1;
+							destroy_level(level);
+						} else break;
 
 					}
 
-					break;
+				}
+
+				break;
 
 			case 'q':
 					is_next_level = 1;

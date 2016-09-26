@@ -2,6 +2,10 @@
 #include <ncurses.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <string.h>
 #include "mystring.h"
 #include "hero.h"
 #include "constants.h"
@@ -68,6 +72,30 @@ void prepare_screen_for_fight(hero_t* hero, enemy_t* enemy) {
 	mvwprintw(stdscr,38, getmaxx(stdscr) / 3 * 2 + 10, "3.%s", "Heal yourself (50 mana - 10hp)");
 }
 
+int send_damage(int sock, int damage) {
+	char buf[256];
+	int recvd_bytes;
+	int total_damage = 0;
+	char* ATTACK_MSG = "attack";
+	if((send(sock, ATTACK_MSG, strlen(ATTACK_MSG), 0)) < 0) {
+		perror("send attack");
+		return -1;
+	}
+	sprintf(buf, "%d", (int)damage);
+	puts("send attack");
+	if((send(sock, (char*)&buf, strlen((char*)&buf), 0)) < 0) {
+		perror("send damage");
+		return -1;
+	}
+	if((recvd_bytes = recv(sock, buf, sizeof(buf), 0)) < 0) {
+		perror("recv total damage");
+		return -1;
+	}
+	buf[recvd_bytes] = '\0';
+	total_damage = strtoul((char*)&buf, NULL, 10);
+	return total_damage;
+}
+
 /* If enemy not defeated player method returns int by value 1 */
 int enemy_base_attack(enemy_t* enemy, hero_t* hero) {
 	float damage;
@@ -112,7 +140,28 @@ int hero_base_attack(hero_t* hero, enemy_t* enemy) {
 	return 1;
 
 }
+int hero_mult_base_attack(hero_t* hero, enemy_t* enemy, int sock) {
+	float damage;
+	srand(clock());
+	if(!(rand() % 100 < enemy->evasion * 100)) {
+		if(enemy->defense >= hero->attack)
+			damage = 1 / (1 + (enemy->defense - hero->attack) * 0.02);
+		else damage = 1 + (hero->attack - enemy->defense) * 0.02;
+		damage *= hero->attack;
+		if((damage = send_damage(sock, (int)damage)) < 0) return -1;
+		if((int)enemy->health - (int)damage >= 0) {
+			enemy->health -= (int)damage;
+			return 1;
+		}
 
+		else {
+			enemy->health = 0; 
+			return 0;
+		}
+	}
+	return 1;
+
+}
 /* If player not defeated enemy method returns int by value 1 */
 /* If defeated returns 0 */
 /* If player have not enougth mana returns 2 */
@@ -216,7 +265,65 @@ int fight(hero_t* hero, enemy_t* enemy) {
 }		
 				
 				
-				
+int mult_fight(hero_t* hero, enemy_t* enemy, int sock) {
+	char key;
+
+	prepare_screen_for_fight(hero, enemy);
+
+	while(hero->health * enemy->health != 0) {
+		key = getch();
+		switch(key) {
+			
+			/* Base attack */
+			case '1':
+				/* Enemy's turn */
+				if(!enemy_base_attack(enemy, hero)) break;
+				/* Player's turn */
+				hero_mult_base_attack(hero, enemy, sock);
+				break;
+			
+			/* Fireball attack */
+			case '2':
+				/* Player's turn */
+				if(!hero_fireball_attack(hero, enemy)) break;
+				/* Enemy's turn */
+				if(!enemy_base_attack(enemy, hero)) break;
+				break;
+			/* Selfheal */	
+			case '3': 
+				/* Player's turn */
+				if(!hero_selfheal(hero)) break;
+				/* Enemy's turn */
+				if(!enemy_base_attack(enemy, hero)) break;
+				break;
+			
+			case 'c':
+				character_panel(hero);
+				break;
+
+		}
+		update_info(hero, enemy);
+	}
+	/* Take exp and try to lvl up*/
+	
+	clear_game_screen();
+	move(38, 1);
+	clrtoeol();
+	mvwprintw(stdscr,38, getmaxx(stdscr) - 1, "%s", "|");
+	if(hero-> health > 0) {
+		hero->exp += enemy->exp;
+		hero_up(hero);
+		mvwprintw(stdscr, (bottom_border - top_border)/2, getmaxx(stdscr)/2, "%s", "YOU WIN!!!");
+		mvwprintw(stdscr, (bottom_border - top_border)/2 + 1, getmaxx(stdscr)/2, "%s", "Press any key to go next level...");
+		getch();
+		return 1;
+	}
+	else { 
+		mvwprintw(stdscr, (bottom_border - top_border)/2, getmaxx(stdscr)/2, "%s", "GAME OVER LOOSER");
+		getch();
+		return 0;
+	}
+}
 		
 		
 
